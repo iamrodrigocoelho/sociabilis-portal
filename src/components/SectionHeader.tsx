@@ -5,6 +5,7 @@ interface SectionHeaderProps {
   align?: 'left' | 'center'
   theme?: 'light' | 'dark'
   className?: string
+  id?: string
 }
 
 export function SectionHeader({
@@ -14,6 +15,7 @@ export function SectionHeader({
   align = 'center',
   theme = 'light',
   className = '',
+  id,
 }: SectionHeaderProps) {
   const alignClass = align === 'center' ? 'text-center' : 'text-left'
   const eyebrowColor = theme === 'dark' ? 'text-canvas/50' : 'text-body-mid'
@@ -31,6 +33,7 @@ export function SectionHeader({
         </p>
       )}
       <h2
+        id={id}
         className={`${titleColor} text-3xl md:text-4xl lg:text-5xl font-medium leading-tight mb-5 max-w-3xl ${maxWidthClass}`}
       >
         {title}

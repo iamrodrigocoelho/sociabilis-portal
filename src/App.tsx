@@ -9,6 +9,7 @@ import { MethodologySection } from './sections/MethodologySection'
 import { DifferentialsSection } from './sections/DifferentialsSection'
 import { AudienceSection } from './sections/AudienceSection'
 import { FinalCTASection } from './sections/FinalCTASection'
+import { ContactSection } from './sections/ContactSection'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <DifferentialsSection />
         <AudienceSection />
         <FinalCTASection />
+        <ContactSection />
       </main>
       <Footer />
     </>

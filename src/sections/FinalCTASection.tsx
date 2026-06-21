@@ -3,7 +3,7 @@ import { getContactHref } from '../config/contact'
 
 export function FinalCTASection() {
   return (
-    <section id="contato" className="bg-ink text-canvas" aria-labelledby="cta-heading">
+    <section id="cta-final" className="bg-ink text-canvas" aria-labelledby="cta-heading">
       <div className="container-base py-20 md:py-28">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-[13px] font-medium tracking-[1.2px] uppercase text-canvas/50 mb-5">

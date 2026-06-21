@@ -22,6 +22,10 @@ export const CONTACT = {
   // instagram: 'https://www.instagram.com/sociabilis'
 }
 
+// Google reCAPTCHA v2 site key — obtain at https://www.google.com/recaptcha/admin
+// The secret key goes in the server .env (RECAPTCHA_SECRET_KEY), never here
+export const RECAPTCHA_SITE_KEY: string | null = '6LfpbSwtAAAAAGyagAA7KJ2NPk5BqvvTi3ofgCV9'
+
 export function getContactHref(): string {
   if (CONTACT.email) return `mailto:${CONTACT.email}`
   if (CONTACT.whatsapp) return `https://wa.me/${CONTACT.whatsapp}`

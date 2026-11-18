@@ -1,243 +1,204 @@
+# DESIGN.md: Sociabilis AI Labs (v2, redesign)
+
+> **Versão 2.0, novembro de 2026.** Substitui a v1, que reproduzia o design system da Zapier (laranja `#ff4f00`, creme, Degular Display) e não correspondia à identidade da Sociabilis.
+>
+> **Referência de estrutura:** o site da Dharma AI (dharma-ai.com.br) inspira a organização das páginas, o ritmo das seções e a linguagem visual minimalista. **Não copiar** textos, números, ícones, imagens ou logotipos da Dharma. Cores, tipografia e conteúdo são da Sociabilis.
+
 ## Overview
 
-Zapier is the original "connect your apps" workflow automation platform — and the marketing surface today reads as confidently-mature. The brand pairs a warm-cream canvas `{colors.canvas}` (`#fffefb`) with a deep coffee-ink `{colors.ink}` (`#201515`) and a single saturated orange `{colors.primary}` (`#ff4f00`) CTA. The warmth in the neutrals — slightly cream rather than pure white — is the brand's defining temperature signal.
+Um site de **laboratório de IA aplicada**: claro, técnico, editorial e sem ruído. A página é majoritariamente branca, com tipografia grande e firme, ícones em traço fino, seções modulares separadas por linhas finas (hairlines) e **poucas** faixas escuras de alto contraste para os momentos de manifesto e conversão.
 
-Type carries the second voice. The proprietary `Degular Display` family carries hero displays at weight 500. The brand uses `Inter` for everything else — sub-displays, body, button, eyebrow. The two-face pairing reads as "the brand has its own typeface for the loud moments and uses the workhorse for the rest" — modest and unflashy.
+A identidade vem do logotipo: **verde Sociabilis** (`#339966`), **verde-lima** (`#8cc63f`) e **grafite** (`#4d4d4d`). O verde é a marca. O lima é um acento de energia, usado com parcimônia e só sobre fundos escuros ou como elemento decorativo.
 
-Cards are universally `{rounded.md}` 12 px. Buttons share the same 12 px radius — not pills, not square. The brand sits between the friendly-rounded and the technical-square camps with a deliberate middle position.
-
-**Key Characteristics:**
-- A single primary CTA color `{colors.primary}` (`#ff4f00`) — saturated orange. The brand's conversion signature.
-- Warm-cream canvas `{colors.canvas}` (`#fffefb`) — not pure white. The temperature IS the brand voice.
-- Deep coffee ink `{colors.ink}` (`#201515`) — not pure black. Warmth carries through to text.
-- Proprietary Degular Display for hero-scale, Inter for everything else. Two-face system.
-- `{rounded.md}` 12 px for buttons and cards — the brand's middle-radius signature.
-- A muted cream / coffee neutral ladder — `{colors.canvas-soft}` (`#f8f4f0`), `{colors.mute}` (`#c5c0b1`), `{colors.body-mid}` (`#939084`), `{colors.body}` (`#605d52`) — every neutral carries warmth, none are cool grey.
+**Características-chave:**
+- Fundo branco puro `{colors.canvas}` e superfícies em verde-acinzentado muito claro `{colors.canvas-soft}`.
+- Um único verde de conversão `{colors.primary}` (`#267a4f`), uma versão acessível do verde do logo, para todos os CTAs primários.
+- Texto em quase-preto com leve tom verde `{colors.ink}` e grafite do logo `{colors.body}`.
+- Faixas escuras `{colors.night}` (verde-noite) para manifesto, CTA intermediário e footer.
+- Ícones em traço fino (1.5px), monocromáticos.
+- Setas `→` no lugar de bullets em frases-chave, para um tom direcional e orientado à ação.
+- Divisores hairline de 1px entre seções e blocos, em vez de sombras.
+- Rótulos de sequência (A, B, C… / 01, 02, 03…) para pilares, etapas e ofertas.
 
 ## Colors
 
-### Brand & Accent
-- **Zapier Orange** (`{colors.primary}` — `#ff4f00`): The single brand accent. Every primary CTA pill, every conversion target. The saturated orange IS the brand.
+### Brand
+| Token | Hex | Uso |
+|---|---|---|
+| `{colors.brand}` | `#339966` | Verde do logo. Ícones, setas `→`, marcadores, linhas e detalhes gráficos (contraste não textual ≥ 3:1), títulos grandes (≥24px) sobre branco. **Não usar** em texto pequeno sobre branco ou `{colors.canvas-soft}` (contraste 3.57:1), inclusive rótulos de sequência. |
+| `{colors.primary}` | `#267a4f` | Fundo dos CTAs primários, links de texto e texto verde pequeno sobre fundo claro (eyebrows, rótulos A/B/C e 01/02). Branco sobre ele: 5.28:1 (AA). |
+| `{colors.primary-hover}` | `#1f6b45` | Hover/active do CTA primário (6.47:1). |
+| `{colors.accent}` | `#8cc63f` | Verde-lima do logo. Apenas sobre `{colors.night}` (8.71:1) ou como elemento gráfico (linhas, marcadores, sublinhados). **Nunca** como texto sobre branco. |
 
 ### Surface
-- **Canvas** (`{colors.canvas}` — `#fffefb`): Warm off-white page background.
-- **Canvas Soft** (`{colors.canvas-soft}` — `#f8f4f0`): Cream-tinted soft surface for cards / inset regions.
+| Token | Hex | Uso |
+|---|---|---|
+| `{colors.canvas}` | `#ffffff` | Fundo padrão das páginas. |
+| `{colors.canvas-soft}` | `#f4f7f5` | Cards, faixas alternadas, blocos de destaque. |
+| `{colors.line}` | `#e3e8e5` | Hairlines, bordas de cards e inputs em repouso. |
+| `{colors.night}` | `#0f1a14` | Faixas escuras (manifesto, CTA intermediário), footer, modal de contato (cabeçalho). |
+| `{colors.night-soft}` | `#18261e` | Cards sobre `{colors.night}`. |
 
 ### Text
-- **Ink** (`{colors.ink}` — `#201515`): Deep coffee — every heading and primary text.
-- **Ink Soft** (`{colors.ink-soft}` — `#2f2a26`): Near-black with brown warmth.
-- **Ink Mid** (`{colors.ink-mid}` — `#36342e`): Mid-emphasis text.
-- **Body** (`{colors.body}` — `#605d52`): Default body text color.
-- **Body Mid** (`{colors.body-mid}` — `#939084`): Secondary body / metadata.
-- **Mute** (`{colors.mute}` — `#c5c0b1`): Lowest-priority text — fine print, low-emphasis captions.
+| Token | Hex | Uso |
+|---|---|---|
+| `{colors.ink}` | `#111412` | Títulos e texto primário (18.5:1). |
+| `{colors.body}` | `#4d4d4d` | Grafite do logo. Texto corrido (8.45:1). |
+| `{colors.body-mid}` | `#5f6661` | Metadados, legendas, datas (5.9:1). |
+| `{colors.on-night}` | `#ffffff` | Texto sobre `{colors.night}`. |
+| `{colors.on-night-mid}` | `#b8c2bc` | Texto secundário sobre `{colors.night}` (9.7:1). |
 
-### Semantic
-The brand doesn't surface a separate semantic palette on its marketing pages. Status / validation cues borrow from the ink + orange hierarchy.
+### Semantic (formulários)
+- Erro: `#b42318`. Sucesso: `{colors.primary}`. Foco: anel de 2px `{colors.brand}` com offset de 2px.
 
 ## Typography
 
-### Font Family
-Two faces ladder the system:
-1. **Degular Display** — proprietary geometric display sans used for hero headlines at weight 500. The brand's typographic signature.
-2. **Inter** — used for sub-displays, body, links, buttons, and eyebrows. Weights 400 / 500 / 600 / 700 are present.
+### Famílias
+1. **Inter Tight** (600): títulos de display. Compacta e técnica, conversa com o lettering condensado do logo.
+2. **Inter** (400/500/600): corpo, navegação, botões, formulários.
+3. **JetBrains Mono** (500), opcional: rótulos de sequência (`01`, `A`) e eyebrows técnicos.
 
-### Hierarchy
+Fontes **self-hosted** (ex.: `@fontsource/inter`, `@fontsource/inter-tight`) com `font-display: swap`, subset latin. Não usar Google Fonts via CDN (privacidade e CSP).
 
-| Token | Size | Weight | Line Height | Letter Spacing | Use |
-|---|---|---|---|---|---|
-| `{typography.display-xl}` | 56px | 500 | 56px | 0 | Hero headline (Degular Display). |
-| `{typography.display-lg}` | 48px | 500 | 48px | 0 | Sub-hero displays (Degular Display). |
-| `{typography.display-md}` | 32px | 500 | 36px | 1px | Section displays (Degular Display, positive tracking). |
-| `{typography.display-sub-lg}` | 48px | 500 | 49.92px | 0 | Inter-rendered sub-display. |
-| `{typography.display-sub-md}` | 32px | 400 | 40px | 0 | Inter sub-display. |
-| `{typography.display-sub-sm}` | 24px | 600 | 30px | -0.6px | Card titles (Inter, semibold). |
-| `{typography.display-xs}` | 20px | 700 | 25px | -0.5px | Inline display micro-headings. |
-| `{typography.body-lg}` | 20px | 400 | 30px | -0.2px | Lead paragraphs. |
-| `{typography.body-md}` | 18px | 400 | 27px | 0 | Default body. |
-| `{typography.body-md-strong}` | 18px | 600 | 27px | 0 | Bolded inline body. |
-| `{typography.body-sm}` | 16px | 400 | 24px | 0 | Secondary body. |
-| `{typography.body-sm-strong}` | 16px | 600 | 24px | 0 | Bold caption. |
-| `{typography.caption}` | 14px | 400 | 21px | 0 | Fine print. |
-| `{typography.eyebrow-uppercase}` | 14px | 500 | 14px | 1px | UPPERCASE eyebrow (Degular Display, positive tracking). |
-| `{typography.button-md}` | 18px | 600 | 27px | 0 | Primary button label. |
-| `{typography.button-sm}` | 14.4px | 700 | 14.4px | 0.144px | Small button label. |
+### Hierarquia
 
-### Principles
-- **Degular Display 500 for hero, Inter for everything else.** Strict role separation.
-- **Positive tracking on the Degular eyebrow** — `1 px` at 14 px is the brand's signature label style.
-- **Sentence-case headlines.** The brand never uppercases display sizes.
+| Token | Desktop | Mobile | Peso | Line height | Tracking | Uso |
+|---|---|---|---|---|---|---|
+| `{typography.display-xl}` | 64px | 40px | 600 | 1.05 | -0.02em | Hero (Inter Tight). |
+| `{typography.display-lg}` | 48px | 32px | 600 | 1.1 | -0.02em | Títulos de seção e manifesto. |
+| `{typography.display-md}` | 32px | 26px | 600 | 1.2 | -0.01em | Subtítulos de seção, títulos de oferta. |
+| `{typography.heading-sm}` | 22px | 20px | 600 | 1.3 | -0.01em | Títulos de card. |
+| `{typography.body-lg}` | 20px | 18px | 400 | 1.55 | 0 | Lead/introdução. |
+| `{typography.body-md}` | 17px | 16px | 400 | 1.6 | 0 | Texto padrão. |
+| `{typography.body-sm}` | 15px | 15px | 400 | 1.5 | 0 | Texto de card, metadados. |
+| `{typography.caption}` | 13px | 13px | 400 | 1.4 | 0 | Notas legais, créditos. |
+| `{typography.eyebrow}` | 13px | 12px | 500 | 1 | 0.12em | MAIÚSCULAS. Rótulo acima do título. |
+| `{typography.label-seq}` | 14px | 14px | 500 | 1 | 0.04em | `A`, `B`, `01`, `02` (mono opcional). Cor `{colors.primary}` em fundo claro. |
+| `{typography.button}` | 16px | 16px | 600 | 1 | 0 | Botões. |
+| `{typography.prose}` | 18px | 17px | 400 | 1.7 | 0 | Corpo dos posts do blog (largura máx. 68ch). |
 
-### Note on Font Substitutes
-Degular Display is proprietary. Open-source substitutes:
-- **Display** — *Inter* weight 500 at hero scale comes closest. *Mona Sans* weight 500 is a softer alternative.
-- **Sub-display + body** — *Inter* is the brand's actual second face.
+### Princípios
+- Títulos em **sentence case**. Maiúsculas só no eyebrow.
+- Títulos curtos e afirmativos. Frases de manifesto em linhas separadas, com ritmo.
+- Uma ideia por título.
 
 ## Layout
 
-### Spacing System
-- **Base unit**: 4 px.
-- **Tokens**: `{spacing.xxs}` 2 px · `{spacing.xs}` 4 px · `{spacing.sm}` 8 px · `{spacing.md}` 12 px · `{spacing.lg}` 16 px · `{spacing.xl}` 24 px · `{spacing.2xl}` 32 px · `{spacing.3xl}` 48 px · `{spacing.4xl}` 64 px.
-- **Section padding**: bands use `{spacing.4xl}` 64 px top/bottom.
-- **Card interior**: cards at `{spacing.xl}` 24 px.
+### Espaçamento
+- Base de 4px. Tokens: `xs` 4 · `sm` 8 · `md` 12 · `lg` 16 · `xl` 24 · `2xl` 32 · `3xl` 48 · `4xl` 64 · `5xl` 96 · `6xl` 128.
+- Seções: `5xl` (96px) vertical no desktop, `4xl` (64px) no mobile. Hero: `6xl` no topo do desktop.
+- Interior de card: `xl` (24px). Cards grandes de oferta: `2xl` (32px).
 
-### Grid & Container
-- Marketing container ~1280 px wide; centred with gutters.
-- Hero: split at desktop (headline left, illustration right); stacked at mobile.
-- Pricing tier grid: 3 / 4-up at desktop.
+### Grid & container
+- Container máximo de **1200px**, com gutters de 24px (mobile) e 32px (desktop).
+- Grid de 12 colunas no desktop. Padrões: 4-up (ícones de valor), 3-up (pilares, mídia, posts), 2-up (ofertas na home).
+- Texto corrido limitado a ~68ch.
 
-### Responsive Strategy
-
-#### Breakpoints
-
-| Name | Width | Key Changes |
+### Breakpoints
+| Nome | Largura | Mudanças |
 |---|---|---|
-| Mobile | < 768px | Hero stacks; grids 1-up; hamburger nav. |
-| Tablet | 768–1023px | 2-up grids. |
-| Desktop | ≥ 1024px | Full grids; hero split. |
+| Mobile | < 640px | Grids 1-up, menu hambúrguer, hero empilhado. |
+| Tablet | 640–1023px | Grids 2-up. |
+| Desktop | ≥ 1024px | Grids completos, header com navegação horizontal. |
 
-#### Touch Targets
-Buttons render ~48 px tall (12 vertical padding + 27 line). WCAG AAA met.
-
-#### Image Behavior
-The brand uses illustrative SVGs of zaps / workflows + product screenshots inside `{rounded.md}` framed cards. Photography is rare.
+Sem rolagem horizontal em nenhuma largura. Alvos de toque com no mínimo 44×44px.
 
 ## Elevation & Depth
 
-| Level | Treatment | Use |
+| Nível | Tratamento | Uso |
 |---|---|---|
-| Level 0 — Flat | No shadow, no border. | Default for hero. |
-| Level 1 — Hairline | 1 px solid `{colors.ink}` border. | Pricing-tier card chrome, outline buttons. |
-| Level 2 — Soft Card | `{colors.canvas-soft}` cream fill against `{colors.canvas}` page. | Default content cards — surface contrast carries elevation. |
+| 0 Flat | Sem borda nem sombra. | Hero, faixas de conteúdo. |
+| 1 Hairline | 1px `{colors.line}`. | Cards padrão, inputs, divisores de seção. |
+| 2 Soft | Fundo `{colors.canvas-soft}`. | Cards de destaque e blocos "ver mais" abertos. |
+| 3 Overlay | `0 24px 48px -12px rgba(15,26,20,.25)` | **Apenas** modal de contato e menu mobile. |
+
+Sem sombras em cards. Profundidade vem de contraste de superfície e hairlines.
 
 ## Shapes
 
-### Border Radius Scale
-
-| Token | Value | Use |
+| Token | Valor | Uso |
 |---|---|---|
-| `{rounded.none}` | 0px | Full-bleed bands. |
-| `{rounded.sm}` | 6px | Inline pills, form inputs. |
-| `{rounded.md}` | 12px | The brand's canonical button + card radius. |
-| `{rounded.pill}` | 9999px | Status pills, badges. |
-| `{rounded.full}` | 9999px | Circular icon containers. |
+| `{rounded.none}` | 0 | Faixas full-bleed, divisores. |
+| `{rounded.sm}` | 6px | Inputs, tags. |
+| `{rounded.md}` | 10px | Botões, cards. |
+| `{rounded.lg}` | 16px | Cards grandes de oferta, modal, capas de post. |
+| `{rounded.pill}` | 9999px | Badges, chips de filtro do blog, chips de índice. |
+
+## Iconography & imagery
+- Ícones em traço fino de 1.5px, 24px ou 32px, cor `{colors.ink}` (ou `{colors.brand}` em destaque). Biblioteca leve com tree-shaking (ex.: `lucide-react`) ou SVGs próprios. Um estilo só.
+- Ilustrações abstratas de redes, nós, grafos e folhas/ramificações, em linha, conectando IA e sustentabilidade. O pássaro geométrico do logo pode inspirar padrões de polígonos (low-poly) como textura de fundo em faixas escuras.
+- **Evitar** robôs, cérebros brilhantes, mãos humanas tocando circuitos e banco de imagens genérico de "IA".
+- Logos de clientes e parceiros em **monocromático** (grafite em fundo claro, branco em fundo escuro), altura uniforme (28–36px), `opacity: .8` com hover 1.
+
+## Motion
+- Sutil: fade + translateY(8px) em 200–300ms ao entrar na viewport (IntersectionObserver, sem biblioteca).
+- Respeitar `prefers-reduced-motion`: sem animação.
+- Faixa de logos pode rolar em loop lento (marquee CSS), pausando no hover, com versão estática se `reduced-motion`.
 
 ## Components
 
 ### Buttons
-
-**`button-primary`** — the orange CTA.
-- Background `{colors.primary}`, text `{colors.on-primary}` (warm white), label `{typography.button-md}`, padding `{spacing.md} {spacing.xl}`, shape `{rounded.md}` 12 px.
-
-**`button-secondary`** — the dark coffee-ink CTA.
-- Background `{colors.ink}`, text `{colors.on-primary}`, same typography / padding / shape.
-
-**`button-tertiary`** — the outline CTA.
-- Background `{colors.canvas}`, text `{colors.ink}`, 1 px solid `{colors.ink}` border, same typography / padding / shape.
-
-**`button-text`** — text-only CTA used inside cards / nav.
-- Background `{colors.canvas}`, text `{colors.ink}`, body in `{typography.button-sm}`, padding `{spacing.sm} {spacing.lg}`, shape `{rounded.md}`.
-
-### Cards & Containers
-
-**`card-content`** — the default cream content card.
-- Background `{colors.canvas-soft}`, text `{colors.ink}`, padding `{spacing.xl}`, shape `{rounded.md}`.
-
-**`card-feature-cream`** — the cream feature card.
-- Same chrome as `card-content`. Hosts headline + body + illustration.
-
-**`card-feature-dark`** — the polarity-flipped dark coffee card.
-- Background `{colors.ink}`, text `{colors.on-primary}`, padding `{spacing.xl}`, shape `{rounded.md}`.
-
-**`pricing-card`** — the default pricing tier card.
-- Background `{colors.canvas}`, text `{colors.ink}`, 1 px solid `{colors.ink}` border, padding `{spacing.xl}`, shape `{rounded.md}`.
-
-**`pricing-card-featured`** — the polarity-flipped featured pricing tier.
-- Background `{colors.ink}`, text `{colors.on-primary}`, same shape / padding.
-
-### Inputs & Forms
-
-**`text-input`** — the canonical text input.
-- Background `{colors.canvas}`, text `{colors.ink}`, 1 px solid `{colors.ink}` border, body in `{typography.body-md}`, padding `{spacing.md} {spacing.lg}`, shape `{rounded.sm}` 6 px.
+- **`button-primary`**: fundo `{colors.primary}`, texto branco, `{typography.button}`, padding 14px 24px, `{rounded.md}`. Hover `{colors.primary-hover}`.
+- **`button-secondary`**: fundo transparente, texto `{colors.ink}`, borda 1px `{colors.ink}`. Hover com fundo `{colors.ink}` e texto branco.
+- **`button-on-night`**: sobre faixa escura, fundo `{colors.accent}`, texto `{colors.night}`.
+- **`link-arrow`**: texto `{colors.primary}` 600 + `→`. A seta desloca 4px no hover. Usado para "Veja mais", "Saber mais" e "Ver todos".
 
 ### Navigation
+- **`header`**: sticky, fundo branco com `backdrop-blur` e hairline inferior ao rolar. Logo à esquerda (altura 32–36px). Links ao centro/direita. CTA `button-primary` "Fale conosco" à direita.
+- **`nav-link`**: `{typography.body-sm}` 500, `{colors.ink}`. Ativo com sublinhado de 2px `{colors.brand}`.
+- **`mobile-menu`**: painel em tela cheia, links grandes (`display-md`), CTA ao final. Fecha com Esc e devolve o foco ao botão.
+- **`skip-link`**: "Pular para o conteúdo", visível no foco.
 
-**`nav-bar`** — the sticky top nav.
-- Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.md} {spacing.xl}`.
+### Signature sections (inspiradas na estrutura da Dharma)
+- **`hero`**: eyebrow + `display-xl` + lead `body-lg` + 2 CTAs. Ilustração abstrata à direita no desktop. Fundo branco.
+- **`value-icons`**: 4 colunas com ícone, título curto (`heading-sm`) e uma linha de apoio. Hairline acima e abaixo. **Sem números inventados.**
+- **`logo-strip`**: rótulo eyebrow à esquerda ("Parceiros e certificações" / "Clientes") e logos em linha.
+- **`manifesto-band`**: fundo `{colors.night}`, eyebrow em `{colors.accent}`, título `display-lg` branco, frases curtas em linhas separadas, palavra-chave destacada em `{colors.accent}`.
+- **`lettered-cards`**: cards com rótulo `A`, `B`, `C` em `{colors.primary}` (texto pequeno: `brand` não atinge AA), título e texto. Sobre `{colors.night}`, rótulo em `{colors.accent}`. Hairline à esquerda ou acima.
+- **`offer-card`** (home): card hairline com ícone, nome, uma frase e `link-arrow` "Veja mais" para a âncora da oferta na página "IA no seu negócio".
+- **`cta-band`**: faixa `{colors.night}` com uma frase forte + `button-on-night`.
+- **`media-card`**: thumbnail 16:9 `{rounded.lg}`, badge de tipo (Artigo / Podcast / Na mídia), data, título e `link-arrow`.
+- **`arrow-statement`**: parágrafo iniciado por `→` em `{colors.brand}`, `body-lg`, para afirmações-chave.
 
-**`nav-link`** — link items inside nav.
-- Text `{colors.ink}`, set in `{typography.body-sm}`.
+### Página "IA no seu negócio"
+- **`offer-index`**: linha de chips (pill) com âncoras para as 6 ofertas, sticky abaixo do header no desktop.
+- **`offer-block`**: bloco longo por oferta, separado por hairline. Contém: rótulo `01`–`06`, nome (`display-md`), pitch, qualificador "Para quem é", lista de 3 `feature-item`, `expandable` "Ver mais", `steps` "Como funciona", entregáveis/resultados, casos de uso e CTA.
+- **`feature-item`**: ícone 32px + título + 1–2 linhas.
+- **`expandable`**: `<details>/<summary>` nativo, com rótulo "Ver mais"/"Ver menos" e chevron. Fundo `{colors.canvas-soft}` quando aberto.
+- **`steps`**: lista ordenada horizontal (desktop) ou vertical (mobile), com número `label-seq` em círculo hairline e linha conectora.
 
-**`footer`** — the dark coffee footer.
-- Background `{colors.ink}`, text `{colors.canvas-soft}`, padding `{spacing.3xl} {spacing.xl}`. Body in `{typography.body-sm}`.
+### Blog
+- **`post-card`**: capa 16:9 (opcional, com fallback de padrão geométrico na cor da marca), tag, data, tempo de leitura, título `heading-sm`, resumo de 2 linhas.
+- **`tag-chip`**: pill hairline. Ativo com fundo `{colors.ink}` e texto branco.
+- **`post-layout`**: coluna de 68ch, título `display-lg`, meta (autor, data, leitura), capa, corpo em `{typography.prose}`. Headings `h2` 28px e `h3` 22px. Links em `{colors.primary}` sublinhados. `blockquote` com borda esquerda 3px `{colors.brand}`. `code` em mono sobre `{colors.canvas-soft}`. Imagens `{rounded.md}` com legenda `caption`.
+- **`post-cta`**: card `{colors.canvas-soft}` ao final do post com convite ao contato.
+- **`pagination`**: anterior/próxima + números, alvos de 44px.
 
-### Signature Components
+### Forms
+- **`text-input`**: fundo branco, borda 1px `{colors.line}`, foco com borda `{colors.brand}` + anel, `{rounded.sm}`, padding 12px 16px, label sempre visível acima.
+- **`checkbox-group`**: para "Interesse" no formulário de contato. Grid 2-up no desktop.
+- **`contact-modal`**: `<dialog>` nativo, `{rounded.lg}`, nível 3, título + formulário. Fecha com Esc e clique fora, com foco preso dentro.
 
-**`hero-band`** — the cream hero band.
-- Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.4xl} {spacing.xl}`. Headline in `{typography.display-xl}` (Degular Display 56 px / 500).
+### Footer
+- Fundo `{colors.night}`, logo em versão clara (ou monocromática), descrição curta, colunas (Navegação, IA no seu negócio, Conteúdo, Contato), redes sociais, linha de parceiros/certificações, política de privacidade e copyright.
 
-**`hero-band-dark`** — the polarity-flipped dark coffee hero.
-- Background `{colors.ink}`, text `{colors.on-primary}`, same scale.
+## Changelog
 
-**`content-band-cream`** — the cream content band that follows hero.
-- Background `{colors.canvas-soft}`, text `{colors.ink}`, padding `{spacing.4xl} {spacing.xl}`. Section headline in `{typography.display-lg}`.
-
-**`content-band-light`** — the white content band.
-- Background `{colors.canvas}`, text `{colors.ink}`, same padding / scale.
-
-**`eyebrow-uppercase`** — the small UPPERCASE Degular eyebrow above section headlines.
-- Text `{colors.ink}`, set in `{typography.eyebrow-uppercase}` (14 px / 500 / `1 px` tracking).
-
-**`badge-pill`** — the inline pill for metadata / tag.
-- Background `{colors.canvas-soft}`, text `{colors.ink}`, body in `{typography.body-sm}`, padding `{spacing.xs} {spacing.md}`, shape `{rounded.pill}`.
-
-### Examples (illustrative)
-
-> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass.
-
-**`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface.
-- Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`
-
-**`ex-pricing-tier-featured`** — Featured/highlighted tier — polarity-flipped surface (dark fill + light text in light mode, light fill + dark text in dark mode).
-- Properties: `backgroundColor`, `textColor`, `rounded`, `padding`
-
-**`ex-product-selector`** — What's Included summary card — re-purposed for SaaS / B2B verticals (NOT a literal product gallery).
-- Properties: `backgroundColor`, `rounded`, `padding`
-
-**`ex-cart-drawer`** — Subscription summary — re-purposed for SaaS / B2B (line items per add-on, not literal cart).
-- Properties: `backgroundColor`, `rounded`, `padding`, `item-divider`
-
-**`ex-app-shell-row`** — Sidebar nav row inside the App Shell example. Active state uses brand primary as the indicator.
-- Properties: `backgroundColor`, `activeIndicator`, `rounded`, `padding`
-
-**`ex-data-table-cell`** — Default data-table th + td chrome. Header uses mono-caps eyebrow typography; body uses body-sm.
-- Properties: `headerBackground`, `headerTypography`, `bodyTypography`, `cellPadding`, `rowBorder`
-
-**`ex-auth-form-card`** — Sign-in / sign-up card. Re-uses feature-card chrome with text-input primitives inside.
-- Properties: `backgroundColor`, `rounded`, `padding`
-
-**`ex-modal-card`** — Modal dialog surface — same chrome as feature-card with elevated shadow.
-- Properties: `backgroundColor`, `rounded`, `padding`
-
-**`ex-empty-state-card`** — Empty-state illustration frame.
-- Properties: `backgroundColor`, `rounded`, `padding`, `captionTypography`
-
-**`ex-toast`** — Toast notification surface — feature-card shape + medium shadow.
-- Properties: `backgroundColor`, `rounded`, `padding`, `typography`
-
+- **v2.1 (nov/2026, QA):** rótulos de sequência (A/B/C, 01/02), eyebrows e outros textos verdes pequenos sobre fundo claro passam de `{colors.brand}` para `{colors.primary}`, para atingir contraste AA. `{colors.brand}` segue para ícones, setas e detalhes gráficos.
 
 ## Do's and Don'ts
 
 ### Do
-- Reserve `{colors.primary}` Zapier orange for every primary CTA. The saturated orange IS the conversion signature.
-- Keep canvas WARM — `{colors.canvas}` `#fffefb` cream, not pure white. The temperature is the brand voice.
-- Set hero headlines in `{typography.display-xl}` Degular Display weight 500. Sentence-case, no uppercase.
-- Pair Degular Display (hero, eyebrow) with Inter (everything else). Two faces, two roles.
-- Use `{rounded.md}` 12 px for buttons + cards. The middle radius is the brand's signature.
-- Pair orange CTA with ink-dark text on cream backgrounds — the three-token rhythm is the brand's whole conversion story.
+- Usar `{colors.primary}` só para CTAs e links. Um CTA primário por bloco.
+- Manter a página predominantemente branca e usar faixas `{colors.night}` no máximo 2–3 vezes por página.
+- Separar seções com hairlines e respiro generoso.
+- Usar `→` em frases-chave e rótulos A/B/C e 01/02 para estruturar.
+- Garantir contraste AA em todo texto (verificar combinações novas).
 
 ### Don't
-- Don't replace cream canvas with pure white. The warmth is the brand.
-- Don't use pure black ink. The coffee-warmth in `#201515` carries through every text color.
-- Don't render CTAs as pills. The brand's button is 12 px rounded rectangle.
-- Don't introduce a second chromatic accent. Orange + cream + coffee is the entire palette.
-- Don't substitute Degular Display with a cool geometric sans (e.g., generic Helvetica) — the brand's display face has warm proportions that the substitute doesn't capture.
+- Não usar o laranja ou o creme da v1.
+- Não usar `{colors.accent}` (lima) como texto ou fundo de botão sobre branco.
+- Não usar gradientes chamativos, glows neon ou "visual de IA" genérico.
+- Não usar números ou métricas de desempenho sem fonte ou case real (a Dharma usa "200x" e similares; a Sociabilis **não** replica esse recurso sem dados próprios).
+- Não copiar textos, ícones, ilustrações ou logos do site de referência.
+- Não aplicar sombras em cards.

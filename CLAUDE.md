@@ -4,14 +4,14 @@
 
 Este projeto é o website institucional da Sociabilis AI Labs, divisão de inteligência artificial aplicada da Sociabilis.
 
-O objetivo é criar uma landing page moderna, responsiva, performática e segura, com foco em AI Deployment, Forward Deployed AI, IA responsável e IA sustentável.
+Na v2, o site é **multipágina**: Home, **IA no seu negócio** (`/ia-no-seu-negocio`), **Blog** (`/blog`) e política de privacidade. O foco é AI Deployment, Forward Deployed AI, IA responsável e IA sustentável.
 
 ## Arquivos de referência obrigatórios
 
 Antes de implementar qualquer alteração, leia:
 
-- `docs/PRD.md`
-- `docs/DESIGN.md`
+- `docs/PRD.md` (v2): requisitos, rotas, conteúdo e fases
+- `docs/DESIGN.md` (v2): design system da Sociabilis
 
 Use o logotipo em:
 
@@ -20,27 +20,39 @@ Use o logotipo em:
 ## Regras principais
 
 - Seguir o PRD como fonte principal de requisitos.
-- Seguir o design system definido em `docs/DESIGN.md`.
-- Não alterar o design system sem necessidade.
-- Não inventar e-mail, telefone, WhatsApp ou links de contato.
-- Usar placeholders configuráveis quando informações de contato não existirem.
+- Seguir o design system definido em `docs/DESIGN.md` (v2). Os tokens da v1 (laranja `#ff4f00`, creme) devem ser **substituídos**, não mantidos.
+- Alterações no design system devem ser feitas primeiro no `docs/DESIGN.md` e depois no `tailwind.config.js`.
+- O site da Dharma AI é referência apenas de **estrutura e linguagem visual**. Nunca copiar textos, números, ícones, imagens, vídeos ou logos dele.
+- Não inventar e-mail, telefone, WhatsApp, links de contato, logos de clientes, depoimentos ou métricas.
+- Usar placeholders configuráveis quando informações ou assets não existirem, e ocultar seções que ficariam vazias.
+- Textos marcados como **[VALIDAR]** no PRD podem ser usados, mas devem ser listados no resumo final como pendentes de validação.
+- Conteúdo fica em `src/content/` (ofertas, logos, mídia, autores, navegação) e `content/blog/` (posts). Não hardcodar conteúdo nos componentes.
 - Criar um website responsivo, mobile-first e acessível.
 - Usar HTML semântico.
-- Aplicar boas práticas de SEO.
+- Aplicar boas práticas de SEO. Todas as rotas devem ter HTML pré-renderizado.
+- Não usar `dangerouslySetInnerHTML`. Markdown deve ser renderizado sem HTML bruto.
 - Não expor secrets, tokens ou credenciais no frontend.
-- Evitar dependências pesadas desnecessárias.
+- Evitar dependências pesadas desnecessárias. Justificar cada dependência nova no resumo.
 - Priorizar performance, segurança e manutenibilidade.
-- Preservar a estrutura existente do projeto.
-- Não criar backend, banco de dados, CMS ou autenticação sem solicitação explícita.
+- Não criar banco de dados, CMS, painel administrativo ou autenticação sem solicitação explícita. O backend existente (`server.js`) pode ser ajustado conforme o PRD.
+
+## Blog: como publicar um post
+
+1. Copiar `content/blog/_TEMPLATE.md` para `content/blog/<slug>.md`.
+2. Preencher o frontmatter (title, slug, description, date, author, tags, cover/coverAlt opcionais, draft). `author` é a chave (ou o nome exato) de um autor em `src/content/authors.ts`; o nome do arquivo deve ser igual ao slug.
+3. Colocar imagens em `public/blog/<slug>/` (WebP, largura máx. 1600px).
+4. Rodar `npm run build`, que valida o frontmatter e gera rotas, sitemap e RSS.
+5. Não publicar posts com afirmações numéricas sem fonte citada.
 
 ## Tom de voz
 
-O tom deve ser profissional, claro, moderno, confiável e orientado a negócios.
+O tom deve ser profissional, claro, moderno, confiável e orientado a negócios. Frases curtas e afirmativas são bem-vindas (manifesto, títulos).
 
 Evitar:
 - promessas exageradas;
+- métricas sem fonte ou case real (ex.: "200x mais barato");
 - jargão técnico excessivo;
-- greenwashing;
+- greenwashing ("neutralizamos", "compensamos" sem metodologia);
 - linguagem genérica de IA;
 - frases vagas como "revolucione seu negócio com IA".
 
@@ -56,10 +68,10 @@ Usar termos como:
 
 ## Comandos
 
-Antes de finalizar alterações, execute os comandos disponíveis no projeto, como:
+Antes de finalizar alterações, execute:
 
-- lint;
-- build;
+- `npm run lint`
+- `npm run build`
 - testes, se existirem.
 
-Se os comandos não existirem, informe isso no resumo final.
+Se algum comando não existir, informe isso no resumo final.

@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { useEffect, useId, useRef, type MouseEvent, type SyntheticEvent } from 'react'
-import { CONTACT_MODAL as COPY } from '../content/contactForm'
+import { CONTACT_FORM } from '../content/contactForm'
+import { useLocale } from '../i18n/context'
 import { Button } from './Button'
 import { ContactForm } from './ContactForm'
 
@@ -17,6 +18,7 @@ interface ContactModalProps {
  * Montado só enquanto aberto (carregado sob demanda pelo ContactModalProvider).
  */
 export default function ContactModal({ interest, onClose }: ContactModalProps) {
+  const COPY = CONTACT_FORM[useLocale()].modal
   const dialogRef = useRef<HTMLDialogElement>(null)
   const titleId = useId()
 

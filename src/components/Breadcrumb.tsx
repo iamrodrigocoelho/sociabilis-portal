@@ -1,4 +1,6 @@
 import { Link } from 'react-router'
+import { UI } from '../content/ui'
+import { useLocale } from '../i18n/context'
 
 export interface Crumb {
   label: string
@@ -8,7 +10,7 @@ export interface Crumb {
 /** Trilha de navegação. O último item é a página atual. */
 export function Breadcrumb({ items }: { items: Crumb[] }) {
   return (
-    <nav aria-label="Trilha de navegação">
+    <nav aria-label={UI[useLocale()].breadcrumb}>
       <ol className="flex flex-wrap items-center gap-x-sm gap-y-xs text-body-sm text-body-mid">
         {items.map((item, i) => {
           const last = i === items.length - 1

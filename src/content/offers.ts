@@ -21,6 +21,7 @@ import {
   Workflow,
   type LucideIcon,
 } from 'lucide-react'
+import { PATHS, type Locale } from '../i18n/locales'
 
 /**
  * As 6 ofertas (RF07 e RF22). Fonte única para home, footer, formulário de
@@ -67,7 +68,7 @@ export interface Offer {
   pagePath?: string
 }
 
-export const OFFERS: Offer[] = [
+const OFFERS_PT: Offer[] = [
   {
     slug: 'impact-scan',
     name: 'AI Opportunity & Impact Scan',
@@ -210,10 +211,124 @@ export const OFFERS: Offer[] = [
   },
 ]
 
-/** Interesse extra do formulário (RF11), além das 6 ofertas. */
-export const START_INTEREST = { slug: 'por-onde-comecar', label: 'Quero entender por onde começar' }
+/**
+ * Textos em inglês, na mesma ordem de OFFERS_PT. Slugs, ícones e estrutura vêm
+ * do português. [VALIDAR EN] Tradução dos textos PT; revisar antes de publicar.
+ */
+type OfferText = Omit<Offer, 'slug' | 'icon' | 'features' | 'pagePath'> & { features?: string[] }
 
-export const OFFERS_PAGE_PATH = '/ia-no-seu-negocio'
-export const offerHref = (offer: Pick<Offer, 'slug'>) => `${OFFERS_PAGE_PATH}#${offer.slug}`
-export const offerCtaLabel = (offer: Offer) => offer.ctaLabel ?? `Falar sobre ${offer.name}`
+const OFFERS_EN_TEXT: OfferText[] = [
+  {
+    name: 'AI Opportunity & Impact Scan',
+    summary: 'An assessment to find where AI creates the most value in your business.',
+    pitch: 'An assessment to identify where AI can create the most value in your business, with clear risks and priorities.',
+    forWhom: 'Companies that want to start or reorganize their AI journey with a focus on results.',
+    features: ['Opportunity map', 'Impact vs. effort matrix', '30, 60 and 90-day roadmap'],
+    moreBenefits: [
+      'Risks and dependencies mapped.',
+      'Cost and social-environmental impact view for each use case.',
+      'Architecture recommendation (RAG, SLMs, automation).',
+    ],
+    steps: ['Immersion (interviews and processes)', 'Mapping and prioritization', 'Roadmap presentation'],
+    deliverables: ['Opportunity map', 'Impact vs. effort matrix', 'Risks and dependencies', '30/60/90 roadmap'],
+  },
+  {
+    name: 'RAG Starter',
+    summary: "Copilots grounded in your company's knowledge base.",
+    pitch: "Deployment of copilots that answer based on your company's knowledge: policies, documents and procedures.",
+    forWhom: 'Companies with knowledge scattered across documents and teams that lose time looking for information.',
+    features: ['Structured knowledge base', "Copilot integrated into your team's channel", 'Access governance and cited sources'],
+    moreBenefits: [
+      'Answers that reference their source.',
+      'Control over who can access what.',
+      'Quality monitoring.',
+      'Efficient model choice.',
+    ],
+    steps: ['Source curation', 'Build and testing', 'Deployment and follow-up'],
+    useCases: ['Internal help desk', 'Policies and procedures', 'ESG documents', 'Technical support', 'HR', 'Legal', 'Operations'],
+  },
+  {
+    name: 'Forward Deployed AI Pod',
+    summary: 'A Sociabilis squad deploying AI alongside your team.',
+    pitch: 'A Sociabilis AI Labs squad working closely with your team to deploy AI in the real context of your business.',
+    forWhom:
+      'Organizations with multiple use cases, sensitive data or a need to speed up deployment with ongoing support.',
+    features: ['Dedicated squad', 'Deployment integrated into your processes', 'Knowledge transfer to your internal team'],
+    profiles: [
+      'AI Deployment Lead',
+      'Forward Deployed AI Engineer',
+      'Product/Process Strategist',
+      'Data/RAG Engineer',
+      'Responsible & Sustainable AI Specialist',
+    ],
+    usesFullMethodology: true,
+  },
+  {
+    name: 'AI Agents & Automation',
+    summary: 'Agents and automations that support or carry out operational tasks.',
+    pitch: 'AI agents and intelligent automations to support or carry out operational tasks.',
+    forWhom: 'Teams with repetitive tasks, high document volumes or workflows that span several systems.',
+    features: ['Agents designed around the process', 'Integrations with APIs and workflows', 'Monitoring and human oversight checkpoints'],
+    useCases: [
+      'Email triage',
+      'Document analysis',
+      'Report generation',
+      'ESG evidence collection',
+      'Internal support',
+      'Integration with APIs and workflows',
+    ],
+  },
+  {
+    name: 'Sustainable AI Assessment',
+    summary: 'The maturity, governance and social-environmental footprint of your AI use.',
+    pitch: 'An assessment of the maturity, governance and social-environmental impact of AI use across your organization.',
+    forWhom: 'Companies that already use AI and need visibility into risks, costs and footprint.',
+    // Linguagem: "estimate", nunca "offset" ou "neutralize" sem metodologia definida.
+    deliverables: [
+      'Tool inventory',
+      'Risk analysis',
+      'Governance recommendations',
+      'Estimate of consumption, cost and emissions',
+      'Optimization and mitigation plan',
+    ],
+  },
+  {
+    name: 'AI Carbon Tracker',
+    summary: 'Estimate, track and communicate the climate footprint of generative AI.',
+    pitch: 'A Sociabilis product to estimate, track and communicate the climate footprint of generative AI use.',
+    forWhom: 'Companies that want to measure and report the impact of their AI use (e.g. in ESG reports).',
+    features: ['Emission estimates per use', 'Tracking over time', 'Material for communication and reporting'],
+    ctaLabel: 'I want to learn about AI Carbon Tracker',
+  },
+]
+
+function buildEnglishOffers(): Offer[] {
+  if (OFFERS_EN_TEXT.length !== OFFERS_PT.length) throw new Error('offers.ts: OFFERS_EN_TEXT fora de sincronia com OFFERS_PT.')
+  return OFFERS_PT.map((pt, i) => {
+    const { features, ...text } = OFFERS_EN_TEXT[i]
+    if ((features?.length ?? 0) !== (pt.features?.length ?? 0)) {
+      throw new Error(`offers.ts: "features" em inglês de ${pt.slug} deve ter ${pt.features?.length ?? 0} itens.`)
+    }
+    return {
+      slug: pt.slug,
+      icon: pt.icon,
+      ...(pt.pagePath ? { pagePath: pt.pagePath } : {}),
+      ...text,
+      ...(pt.features ? { features: pt.features.map((f, j) => ({ ...f, title: features![j] })) } : {}),
+    }
+  })
+}
+
+export const OFFERS: Record<Locale, Offer[]> = { pt: OFFERS_PT, en: buildEnglishOffers() }
+
+/** Interesse extra do formulário (RF11), além das 6 ofertas. O slug é o mesmo nos dois idiomas. */
+export const START_INTEREST_SLUG = 'por-onde-comecar'
+export const START_INTEREST: Record<Locale, { slug: string; label: string }> = {
+  pt: { slug: START_INTEREST_SLUG, label: 'Quero entender por onde começar' },
+  en: { slug: START_INTEREST_SLUG, label: "I'd like to understand where to start" },
+}
+
+export const offerHref = (locale: Locale, offer: Pick<Offer, 'slug'>) => `${PATHS.offers[locale]}#${offer.slug}`
+export const offerCtaLabel = (locale: Locale, offer: Offer) =>
+  offer.ctaLabel ?? (locale === 'pt' ? `Falar sobre ${offer.name}` : `Talk to us about ${offer.name}`)
 export const offerNumber = (index: number) => String(index + 1).padStart(2, '0')

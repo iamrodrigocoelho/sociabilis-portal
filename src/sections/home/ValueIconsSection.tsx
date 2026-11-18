@@ -1,9 +1,14 @@
 import { Container } from '../../components/Container'
 import { FeatureItem } from '../../components/FeatureItem'
-import { VALUE_ICONS, VALUE_ICONS_TITLE } from '../../content/home'
+import { HOME } from '../../content/home'
+import { useLocale } from '../../i18n/context'
+import { UI } from '../../content/ui'
 
 /** RF03: 4 colunas, sem métricas numéricas. */
 export function ValueIconsSection() {
+  const locale = useLocale()
+  const VALUE_ICONS = HOME[locale].valueIcons
+  const VALUE_ICONS_TITLE = UI[locale].valueIconsTitle
   return (
     <section aria-labelledby="value-icons-title" className="border-y border-line">
       <Container>

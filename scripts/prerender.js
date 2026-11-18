@@ -3,7 +3,8 @@
  * SSR (dist-ssr/entry-server.js), com <head> completo (title, description,
  * canonical, OG, JSON-LD) e conteúdo indexável.
  *
- * Também gera: dist/404.html, dist/sitemap.xml, dist/robots.txt e
+ * Também gera: dist/404.html e dist/en/404.html, dist/sitemap.xml, dist/robots.txt,
+ * os RSS de cada idioma (dist/blog/rss.xml, dist/en/blog/rss.xml) e
  * dist/.routes.json (mapa rota → arquivo usado pelo server.js).
  *
  * Executado por `npm run build` após `vite build` e `vite build --ssr`.
@@ -15,16 +16,22 @@ import { pathToFileURL } from 'node:url'
 const ROOT = resolve(import.meta.dirname, '..')
 const DIST = join(ROOT, 'dist')
 const SSR_DIR = join(ROOT, 'dist-ssr')
-const NOT_FOUND_URL = '/__404__'
+/** Caminhos que não existem, usados para renderizar a 404 de cada idioma. */
+const NOT_FOUND_PAGES = [
+  { url: '/__404__', file: '404.html' },
+  { url: '/en/__404__', file: join('en', '404.html') },
+]
 
-const { render, getPrerenderPaths, modulesFor, renderHeadToString, getBlogFeed, SITE_CONFIG, CONTACT_INTERESTS } = await import(
+const { render, getPrerenderPaths, modulesFor, renderHeadToString, getBlogFeeds, SITE_CONFIG, CONTACT_INTERESTS } = await import(
   pathToFileURL(join(SSR_DIR, 'entry-server.js')).href
 )
 
 const template = await readFile(join(DIST, 'index.html'), 'utf8')
-if (!template.includes('<!--app-head-->') || !template.includes('<!--app-html-->')) {
-  throw new Error('index.html precisa conter <!--app-head--> e <!--app-html-->.')
+const HTML_LANG_DEFAULT = '<html lang="pt-BR">'
+if (!template.includes('<!--app-head-->') || !template.includes('<!--app-html-->') || !template.includes(HTML_LANG_DEFAULT)) {
+  throw new Error(`index.html precisa conter <!--app-head-->, <!--app-html--> e ${HTML_LANG_DEFAULT}.`)
 }
+const HTML_LANG = { pt: 'pt-BR', en: 'en' }
 
 // Manifest do Vite: chunk(s) JS de cada página, para <link rel="modulepreload">.
 const MANIFEST_DIR = join(DIST, '.vite')
@@ -58,13 +65,17 @@ async function renderPage(url) {
     return null
   }
   const head = [renderHeadToString(seo), preloadLinks(url)].filter(Boolean).join('\n    ')
-  const page = template.replace('<!--app-head-->', head).replace('<!--app-html-->', html)
+  const page = template
+    .replace(HTML_LANG_DEFAULT, `<html lang="${HTML_LANG[seo.locale]}">`)
+    .replace('<!--app-head-->', head)
+    .replace('<!--app-html-->', html)
   return { page, seo }
 }
 
 function checkSeo(url, seo) {
+  // Únicos dentro de cada idioma (o mesmo título pode existir em PT e EN, ex.: "Blog").
   for (const field of ['title', 'description']) {
-    const value = seo[field]
+    const value = `${seo.locale}:${seo[field]}`
     if (seen[field].has(value)) errors.push(`${url}: ${field} duplicado de ${seen[field].get(value)}.`)
     seen[field].set(value, url)
   }
@@ -89,8 +100,12 @@ for (const path of paths) {
   }
 }
 
-const notFound = await renderPage(NOT_FOUND_URL)
-if (notFound) await writeFile(join(DIST, '404.html'), notFound.page)
+for (const { url, file } of NOT_FOUND_PAGES) {
+  const notFound = await renderPage(url)
+  if (!notFound) continue
+  await mkdir(dirname(join(DIST, file)), { recursive: true })
+  await writeFile(join(DIST, file), notFound.page)
+}
 
 // sitemap.xml e robots.txt
 const escapeXml = (s) =>
@@ -108,37 +123,43 @@ const sitemap = [
 await writeFile(join(DIST, 'sitemap.xml'), sitemap)
 await writeFile(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_CONFIG.url}/sitemap.xml\n`)
 // RSS 2.0 do blog
-const feed = getBlogFeed()
 const rfc822 = (date) => new Date(`${date}T12:00:00Z`).toUTCString()
-const rss = [
-  '<?xml version="1.0" encoding="UTF-8"?>',
-  '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">',
-  '  <channel>',
-  `    <title>${escapeXml(feed.title)}</title>`,
-  `    <link>${escapeXml(feed.link)}</link>`,
-  `    <description>${escapeXml(feed.description)}</description>`,
-  '    <language>pt-BR</language>',
-  `    <atom:link href="${escapeXml(feed.feedUrl)}" rel="self" type="application/rss+xml" />`,
-  ...(feed.items[0] ? [`    <lastBuildDate>${rfc822(feed.items[0].date)}</lastBuildDate>`] : []),
-  ...feed.items.map((item) =>
-    [
-      '    <item>',
-      `      <title>${escapeXml(item.title)}</title>`,
-      `      <link>${escapeXml(item.link)}</link>`,
-      `      <guid isPermaLink="true">${escapeXml(item.link)}</guid>`,
-      `      <pubDate>${rfc822(item.date)}</pubDate>`,
-      `      <dc:creator>${escapeXml(item.author)}</dc:creator>`,
-      `      <description>${escapeXml(item.description)}</description>`,
-      ...item.categories.map((c) => `      <category>${escapeXml(c)}</category>`),
-      '    </item>',
-    ].join('\n'),
-  ),
-  '  </channel>',
-  '</rss>',
-  '',
-].join('\n')
-await mkdir(join(DIST, 'blog'), { recursive: true })
-await writeFile(join(DIST, 'blog', 'rss.xml'), rss)
+function renderRss(feed) {
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">',
+    '  <channel>',
+    `    <title>${escapeXml(feed.title)}</title>`,
+    `    <link>${escapeXml(feed.link)}</link>`,
+    `    <description>${escapeXml(feed.description)}</description>`,
+    `    <language>${feed.language}</language>`,
+    `    <atom:link href="${escapeXml(feed.feedUrl)}" rel="self" type="application/rss+xml" />`,
+    ...(feed.items[0] ? [`    <lastBuildDate>${rfc822(feed.items[0].date)}</lastBuildDate>`] : []),
+    ...feed.items.map((item) =>
+      [
+        '    <item>',
+        `      <title>${escapeXml(item.title)}</title>`,
+        `      <link>${escapeXml(item.link)}</link>`,
+        `      <guid isPermaLink="true">${escapeXml(item.link)}</guid>`,
+        `      <pubDate>${rfc822(item.date)}</pubDate>`,
+        `      <dc:creator>${escapeXml(item.author)}</dc:creator>`,
+        `      <description>${escapeXml(item.description)}</description>`,
+        ...item.categories.map((c) => `      <category>${escapeXml(c)}</category>`),
+        '    </item>',
+      ].join('\n'),
+    ),
+    '  </channel>',
+    '</rss>',
+    '',
+  ].join('\n')
+}
+
+const feeds = getBlogFeeds()
+for (const feed of feeds) {
+  const file = join(DIST, feed.path.replace(/^\/+/, ''))
+  await mkdir(dirname(file), { recursive: true })
+  await writeFile(file, renderRss(feed))
+}
 
 // Lista branca de interesses do formulário, lida pelo server.js (fonte: src/content/offers.ts).
 await writeFile(join(DIST, '.contact-interests.json'), JSON.stringify(CONTACT_INTERESTS, null, 2))
@@ -154,5 +175,7 @@ if (errors.length) {
   process.exit(1)
 }
 console.log(
-  `✓ ${Object.keys(routeMap).length} rotas pré-renderizadas + 404, sitemap.xml, robots.txt e blog/rss.xml (${feed.items.length} posts)`,
+  `✓ ${Object.keys(routeMap).length} rotas pré-renderizadas + 404 (pt, en), sitemap.xml, robots.txt e RSS (${feeds
+    .map((f) => `${f.language}: ${f.items.length} posts`)
+    .join(', ')})`,
 )

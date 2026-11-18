@@ -1,13 +1,14 @@
 import { CONTACT, SITE_CONFIG } from '../config/contact'
+import { LOCALE_META, PATHS, type Locale } from '../i18n/locales'
 import { absoluteUrl } from './seo'
 
 /** JSON-LD Organization (home). Só inclui redes sociais configuradas. */
-export function organizationSchema(): Record<string, unknown> {
+export function organizationSchema(locale: Locale): Record<string, unknown> {
   const sameAs = [CONTACT.linkedin, CONTACT.instagram].filter((v): v is string => Boolean(v))
   return {
     '@type': 'Organization',
     name: SITE_CONFIG.name,
-    url: SITE_CONFIG.url,
+    url: absoluteUrl(PATHS.home[locale]),
     logo: absoluteUrl('/img/logo-big-sociabilis.png'),
     description: 'AI Deployment Lab for Sustainable Business Transformation.',
     parentOrganization: { '@type': 'Organization', name: 'Sociabilis', url: SITE_CONFIG.mainSite },
@@ -17,9 +18,14 @@ export function organizationSchema(): Record<string, unknown> {
 }
 
 /** JSON-LD Service de cada oferta (página IA no seu negócio). */
-export function serviceSchema(offer: { slug: string; name: string; pitch: string }, pagePath: string): Record<string, unknown> {
+export function serviceSchema(
+  offer: { slug: string; name: string; pitch: string },
+  pagePath: string,
+  locale: Locale,
+): Record<string, unknown> {
   return {
     '@type': 'Service',
+    inLanguage: LOCALE_META[locale].htmlLang,
     '@id': absoluteUrl(`${pagePath}#${offer.slug}`),
     name: offer.name,
     description: offer.pitch,
@@ -32,15 +38,16 @@ export function serviceSchema(offer: { slug: string; name: string; pitch: string
 export function blogPostingSchema(
   post: { slug: string; title: string; description: string; date: string; updated?: string; tags: { label: string }[]; cover?: { src: string } },
   author: { name: string; kind?: 'person' | 'organization' } | undefined,
+  locale: Locale,
 ): Record<string, unknown> {
-  const url = absoluteUrl(`/blog/${post.slug}`)
+  const url = absoluteUrl(`${PATHS.blog[locale]}/${post.slug}`)
   return {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
     datePublished: post.date,
     dateModified: post.updated ?? post.date,
-    inLanguage: 'pt-BR',
+    inLanguage: LOCALE_META[locale].htmlLang,
     url,
     mainEntityOfPage: url,
     image: absoluteUrl(post.cover?.src ?? SITE_CONFIG.defaultOgImage),

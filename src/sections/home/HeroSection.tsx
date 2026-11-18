@@ -2,10 +2,12 @@ import { Button } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Eyebrow } from '../../components/Eyebrow'
 import { HeroIllustration } from '../../components/HeroIllustration'
-import { HERO } from '../../content/home'
+import { HOME } from '../../content/home'
+import { useLocale } from '../../i18n/context'
 
 /** RF02 */
 export function HeroSection() {
+  const HERO = HOME[useLocale()].hero
   return (
     <section aria-labelledby="hero-title" className="overflow-hidden pb-4xl pt-3xl lg:pb-5xl lg:pt-6xl">
       <Container className="grid items-center gap-3xl lg:grid-cols-12">

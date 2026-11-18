@@ -4,21 +4,24 @@ import { ContactForm } from '../../components/ContactForm'
 import { Section } from '../../components/Section'
 import { SectionHeader } from '../../components/SectionHeader'
 import { isContactInterest } from '../../content/contactForm'
-import { CONTACT_SECTION } from '../../content/home'
-import { INTEREST_PARAM } from '../../content/navigation'
+import { HOME } from '../../content/home'
+import { useLocale } from '../../i18n/context'
+import { INTEREST_PARAM } from '../../i18n/locales'
 
 /**
  * RF11: formulário de contato (âncora #contato). Lê `?interesse=` da URL
  * (links de contato abertos sem o modal, ex.: em nova aba) e pré-seleciona.
  */
 export function ContactSection() {
+  const locale = useLocale()
+  const CONTACT_SECTION = HOME[locale].contactSection
   const { search } = useLocation()
   // Lido após a hidratação: o HTML pré-renderizado não tem query string.
   const [preset, setPreset] = useState<string | null>(null)
   useEffect(() => {
-    const interest = new URLSearchParams(search).get(INTEREST_PARAM)
+    const interest = new URLSearchParams(search).get(INTEREST_PARAM[locale])
     setPreset(isContactInterest(interest) ? interest : null)
-  }, [search])
+  }, [search, locale])
 
   return (
     <Section id={CONTACT_SECTION.id} tone="soft" labelledBy="contact-title">

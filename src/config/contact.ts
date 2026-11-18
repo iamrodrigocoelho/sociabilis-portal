@@ -2,14 +2,11 @@
 
 export const SITE_CONFIG = {
   name: 'Sociabilis AI Labs',
-  tagline: 'IA aplicada, governança desde o início e sustentabilidade como diferencial.',
   mainSite: 'https://sociabilis.com.br',
   // URL pública deste site (canonical, Open Graph, sitemap, RSS). Sem barra final.
   url: 'https://sociabilis.com.br',
   // Imagem Open Graph padrão (ideal: 1200×630). [ASSET] substituir por arte dedicada.
   defaultOgImage: '/img/logo-big-sociabilis.png',
-  locale: 'pt_BR',
-  copyright: `© ${new Date().getFullYear()} Sociabilis. Todos os direitos reservados.`,
 }
 
 export const CONTACT = {
@@ -20,11 +17,9 @@ export const CONTACT = {
   whatsapp: null as string | null,
   // whatsapp: '5511999999999' — country code + DDD + number, no spaces or dashes
 
-  linkedin: null as string | null,
-  // linkedin: 'https://www.linkedin.com/company/sociabilis'
+  linkedin: 'https://www.linkedin.com/company/sociabilis/' as string | null,
 
-  instagram: null as string | null,
-  // instagram: 'https://www.instagram.com/sociabilis'
+  instagram: 'https://instagram.com/sociabilis.io' as string | null,
 }
 
 // Google reCAPTCHA v2 site key — obtain at https://www.google.com/recaptcha/admin

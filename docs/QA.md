@@ -89,3 +89,34 @@ Teste com teclas reais no Chrome, layout mobile (614px), contra o servidor de pr
 - Logos de parceiros e clientes, com autorização de uso.
 - Itens de mídia (podcasts, artigos, entrevistas).
 - Imagem de compartilhamento (1200×630) e favicon em alta resolução (≥ 180px ou SVG).
+
+---
+
+# Rodada 2: versão em inglês (PRD seção 15)
+
+18/11/2026, build de produção com as 14 rotas (7 por idioma).
+
+## Lighthouse mobile
+
+| Página | Performance | Acessibilidade | Boas práticas | SEO |
+|---|---|---|---|---|
+| `/en` | 100 | 100 | 100 | 100 |
+| `/en/ai-for-your-business` | 100 | 100 | 100 | 100 |
+| `/en/blog` | 100 | 100 | 100 | 100 |
+| `/en/blog/where-to-start-deploying-ai` | 100 | 100 | 100 | 100 |
+| `/` (regressão) | 100 | 100 | 100 | 100 |
+
+## Verificado
+
+- `<html lang>`, `og:locale`/`og:locale:alternate`, canonical e RSS corretos em cada idioma.
+- `hreflang` (`pt-BR`, `en`, `x-default`) só entre páginas equivalentes: home, ofertas, blog, privacidade e posts com tradução. Tags e 404 não têm.
+- Nenhum texto em português no HTML das páginas em inglês.
+- Seletor PT | EN: o post leva à tradução; a página de tag (sem equivalente) leva ao índice do blog do outro idioma. `lang`, canonical e `hreflang` atualizados na navegação client-side.
+- Modal em inglês: interesse pré-selecionado pelo CTA, reCAPTCHA em inglês e mensagens de erro em inglês, a partir dos códigos do servidor.
+- Servidor: `/en/` redireciona para `/en`; caminhos inexistentes sob `/en` recebem a 404 em inglês.
+- Larguras 360/768/1024/1440: sem rolagem horizontal. O header de desktop (links + seletor + CTA) cabe em uma linha a partir de 1024px.
+- Console sem erros.
+
+## Corrigido
+
+- **Menu mobile com altura zero (defeito desde a Fase 1):** o `backdrop-filter` do `<header>` tornava o header o bloco de referência do painel `position: fixed`, que abria com altura 0. O desfoque passou para uma camada de fundo dentro do header. Os testes anteriores verificaram foco e atributos ARIA, mas não o painel aberto na tela.

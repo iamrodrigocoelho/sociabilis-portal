@@ -1,7 +1,8 @@
 import { DarkBand } from '../../components/DarkBand'
 import { Eyebrow } from '../../components/Eyebrow'
 import { Reveal } from '../../components/Reveal'
-import { MANIFESTO } from '../../content/home'
+import { HOME } from '../../content/home'
+import { useLocale } from '../../i18n/context'
 
 /** "Texto **destaque** texto" → nós React, sem HTML bruto. */
 function renderHighlight(line: string) {
@@ -18,6 +19,7 @@ function renderHighlight(line: string) {
 
 /** RF05: manifesto em faixa escura, âncora #sobre. */
 export function ManifestoSection() {
+  const MANIFESTO = HOME[useLocale()].manifesto
   return (
     <DarkBand id={MANIFESTO.id} labelledBy="manifesto-title">
       <Reveal className="grid gap-3xl lg:grid-cols-12">

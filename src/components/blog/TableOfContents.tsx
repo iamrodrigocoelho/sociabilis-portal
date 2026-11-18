@@ -1,8 +1,10 @@
-import { BLOG_LABELS as L } from '../../content/blog'
+import { BLOG } from '../../content/blog'
+import { useLocale } from '../../i18n/context'
 import type { TocItem } from '../../lib/blogTypes'
 
 /** Sumário automático (posts com 3 ou mais h2). */
 export function TableOfContents({ items }: { items: TocItem[] }) {
+  const L = BLOG[useLocale()].labels
   if (items.length < 3) return null
   return (
     <nav aria-labelledby="toc-title" className="rounded-md bg-canvas-soft p-xl">

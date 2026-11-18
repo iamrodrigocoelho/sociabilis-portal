@@ -1,10 +1,15 @@
 import { SITE_CONFIG } from '../config/contact'
+import { DEFAULT_LOCALE, LOCALES, LOCALE_META, PATHS, type Locale } from '../i18n/locales'
 
 /**
  * Metadados de uma página. Usado pelo componente <Seo> no cliente e pelo
  * script de pré-renderização (scripts/prerender.js) para gerar o <head>.
  */
 export interface SeoData {
+  /** Idioma da página (<html lang>, og:locale). */
+  locale: Locale
+  /** Caminhos equivalentes em cada idioma (hreflang). Preenchido pelo <Seo>. */
+  alternates?: Partial<Record<Locale, string>>
   /** Título da página, sem o sufixo da marca. */
   title: string
   /** Meta description (ideal: 120–160 caracteres). */
@@ -67,7 +72,7 @@ export function buildHeadTags(seo: SeoData): HeadTag[] {
     meta('property', 'og:description', seo.description),
     meta('property', 'og:url', url),
     meta('property', 'og:image', image),
-    meta('property', 'og:locale', SITE_CONFIG.locale),
+    meta('property', 'og:locale', LOCALE_META[seo.locale].ogLocale),
     meta('property', 'og:site_name', SITE_CONFIG.name),
     meta('name', 'twitter:card', 'summary_large_image'),
     meta('name', 'twitter:title', title),
@@ -83,6 +88,30 @@ export function buildHeadTags(seo: SeoData): HeadTag[] {
   if (seo.modifiedTime) tags.push(meta('property', 'article:modified_time', seo.modifiedTime))
 
   if (!seo.noindex) tags.push({ tag: 'link', attrs: { rel: 'canonical', href: url } })
+
+  // hreflang só entre páginas realmente equivalentes (RF43); x-default → português.
+  const alternates = seo.noindex ? {} : (seo.alternates ?? {})
+  if (Object.keys(alternates).length > 1) {
+    for (const locale of LOCALES) {
+      const path = alternates[locale]
+      if (!path) continue
+      tags.push({ tag: 'link', attrs: { rel: 'alternate', hreflang: LOCALE_META[locale].hreflang, href: canonicalUrl(path) } })
+      if (locale !== seo.locale) tags.push(meta('property', 'og:locale:alternate', LOCALE_META[locale].ogLocale))
+    }
+    const fallback = alternates[DEFAULT_LOCALE]
+    if (fallback) tags.push({ tag: 'link', attrs: { rel: 'alternate', hreflang: 'x-default', href: canonicalUrl(fallback) } })
+  }
+
+  // RSS do blog no idioma da página.
+  tags.push({
+    tag: 'link',
+    attrs: {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: `Blog | ${SITE_CONFIG.name}`,
+      href: `${PATHS.blog[seo.locale]}/rss.xml`,
+    },
+  })
 
   const jsonLd = seo.jsonLd ? (Array.isArray(seo.jsonLd) ? seo.jsonLd : [seo.jsonLd]) : []
   for (const data of jsonLd) {
@@ -128,6 +157,7 @@ export function renderHeadToString(seo: SeoData): string {
 // --- Aplicação no DOM (navegação client-side) ----------------------------
 
 export function applyHead(seo: SeoData): void {
+  document.documentElement.lang = LOCALE_META[seo.locale].htmlLang
   document.title = fullTitle(seo)
   document.head.querySelectorAll(`[${SEO_ATTR}]`).forEach((el) => el.remove())
   for (const { tag, attrs, text } of buildHeadTags(seo)) {

@@ -1,5 +1,7 @@
 import { Suspense } from 'react'
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
+import { LocaleContext } from '../i18n/context'
+import { localeFromPath } from '../i18n/locales'
 import { ContactModalProvider } from './ContactModalProvider'
 import { Footer } from './Footer'
 import { Header } from './Header'
@@ -12,17 +14,22 @@ function PageFallback() {
 }
 
 export function Layout() {
+  // O idioma vem da URL: /en/... é inglês; o resto, português (RF40).
+  const locale = localeFromPath(useLocation().pathname)
+
   return (
-    <ContactModalProvider>
-      <SkipLink />
-      <Header />
-      <main id="main-content" tabIndex={-1} className="focus:outline-none">
-        <Suspense fallback={<PageFallback />}>
-          <Outlet />
-        </Suspense>
-      </main>
-      <Footer />
-      <ScrollManager />
-    </ContactModalProvider>
+    <LocaleContext.Provider value={locale}>
+      <ContactModalProvider>
+        <SkipLink />
+        <Header />
+        <main id="main-content" tabIndex={-1} className="focus:outline-none">
+          <Suspense fallback={<PageFallback />}>
+            <Outlet />
+          </Suspense>
+        </main>
+        <Footer />
+        <ScrollManager />
+      </ContactModalProvider>
+    </LocaleContext.Provider>
   )
 }

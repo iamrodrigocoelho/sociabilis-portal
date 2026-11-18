@@ -2,7 +2,9 @@ import { CircleCheck } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { RECAPTCHA_SITE_KEY } from '../config/contact'
-import { CONTACT_FORM as COPY, CONTACT_INTERESTS, isContactInterest } from '../content/contactForm'
+import { CONTACT_FORM, contactInterests, isContactInterest, type ContactErrorCode } from '../content/contactForm'
+import { PATHS } from '../i18n/locales'
+import { useLocale } from '../i18n/context'
 import { Button } from './Button'
 
 declare global {
@@ -45,6 +47,10 @@ interface ContactFormProps {
  * carregado quando o formulário se aproxima da área visível ou recebe foco.
  */
 export function ContactForm({ initialInterests = [], variant = 'section', successAction }: ContactFormProps) {
+  const locale = useLocale()
+  const COPY = CONTACT_FORM[locale]
+  const INTERESTS = contactInterests(locale)
+  const recaptchaLang = COPY.recaptchaLang
   const uid = useId()
   const [form, setForm] = useState(EMPTY)
   const [interests, setInterests] = useState<Set<string>>(() => new Set(initialInterests.filter(isContactInterest)))
@@ -83,7 +89,8 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
       }
       const script = document.createElement('script')
       script.id = SCRIPT_ID
-      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit&hl=pt-BR'
+      // O idioma do widget vale para a página inteira (o script é carregado uma vez).
+      script.src = `https://www.google.com/recaptcha/api.js?render=explicit&hl=${recaptchaLang}`
       script.async = true
       script.defer = true
       script.addEventListener('load', renderWidget, { once: true })
@@ -93,7 +100,7 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
     observer.observe(formEl)
     formEl.addEventListener('focusin', load)
     return cleanup
-  }, [])
+  }, [recaptchaLang])
 
   const clearInvalid = (name: FieldName) => {
     if (!invalid.has(name)) return
@@ -159,7 +166,8 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
         body: JSON.stringify({
           ...form,
           // Mantém a ordem das opções no formulário.
-          interesses: CONTACT_INTERESTS.map((i) => i.slug).filter((slug) => interests.has(slug)),
+          interesses: INTERESTS.map((i) => i.slug).filter((slug) => interests.has(slug)),
+          idioma: locale,
           'g-recaptcha-response': captchaToken,
         }),
       })
@@ -169,8 +177,9 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
         setInterests(new Set())
         return
       }
-      const data = (await res.json().catch(() => ({}))) as { error?: string }
-      fail(data.error ?? COPY.errors.generic)
+      // O servidor devolve um código; a mensagem é exibida no idioma da página (RF44).
+      const data = (await res.json().catch(() => ({}))) as { error?: ContactErrorCode }
+      fail((data.error && COPY.errors[data.error]) || COPY.errors.generic)
       resetCaptcha()
     } catch {
       fail(COPY.errors.network)
@@ -246,7 +255,7 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
           <div
             className={`mt-md grid gap-sm rounded-md sm:grid-cols-2 ${invalid.has('interesses') ? 'ring-2 ring-error/40 ring-offset-4' : ''}`}
           >
-            {CONTACT_INTERESTS.map((interest) => (
+            {INTERESTS.map((interest) => (
               <label
                 key={interest.slug}
                 className="flex min-h-touch cursor-pointer items-center gap-md rounded-sm border border-line px-md py-sm text-body-sm text-ink transition-colors duration-200 hover:border-ink has-[:checked]:border-primary has-[:checked]:bg-canvas-soft"
@@ -291,7 +300,7 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
 
       <p className="mt-xl text-caption text-body-mid">
         {COPY.privacy.before}
-        <Link to="/politica-de-privacidade" className="text-primary underline underline-offset-2">
+        <Link to={PATHS.privacy[locale]} className="text-primary underline underline-offset-2">
           {COPY.privacy.linkLabel}
         </Link>
         {COPY.privacy.after}

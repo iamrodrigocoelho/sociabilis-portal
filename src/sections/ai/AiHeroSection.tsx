@@ -2,10 +2,12 @@ import { ArrowStatement } from '../../components/ArrowStatement'
 import { Button } from '../../components/Button'
 import { Section } from '../../components/Section'
 import { SectionHeader } from '../../components/SectionHeader'
-import { HERO } from '../../content/aiForBusiness'
+import { AI_FOR_BUSINESS } from '../../content/aiForBusiness'
+import { useLocale } from '../../i18n/context'
 
 /** RF20 */
 export function AiHeroSection() {
+  const HERO = AI_FOR_BUSINESS[useLocale()].hero
   return (
     <Section spacing="hero" labelledBy="ai-hero-title">
       <SectionHeader

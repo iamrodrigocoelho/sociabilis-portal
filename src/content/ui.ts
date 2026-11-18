@@ -1,0 +1,66 @@
+import type { Locale } from '../i18n/locales'
+
+/** Textos de interface usados por componentes genéricos. [VALIDAR EN] para o inglês. */
+const pt = {
+  skipToContent: 'Pular para o conteúdo',
+  homeLink: (site: string) => `${site}: página inicial`,
+  mainNav: 'Navegação principal',
+  menu: 'Menu',
+  openMenu: 'Abrir menu',
+  closeMenu: 'Fechar menu',
+  language: 'Idioma',
+  switchTo: 'Ver esta página em português',
+  opensNewTab: '(abre em nova aba)',
+  breadcrumb: 'Trilha de navegação',
+  home: 'Início',
+  pagination: { label: 'Paginação', previous: 'Anterior', next: 'Próxima', page: 'Página ' },
+  expandable: { open: 'Ver mais', close: 'Ver menos' },
+  media: { access: 'Acessar', readPost: 'Ler artigo' },
+  footer: {
+    tagline: 'IA aplicada, governança desde o início e sustentabilidade como diferencial.',
+    contactTitle: 'Contato',
+    contactForm: 'Formulário de contato',
+    partners: 'Parceiros e certificações',
+    divisionOf: 'Uma divisão da',
+    copyright: (year: number) => `© ${year} Sociabilis. Todos os direitos reservados.`,
+  },
+  valueIconsTitle: 'Como a Sociabilis AI Labs trabalha',
+  offerIndex: 'Nossas ofertas',
+  audienceSegments: 'Segmentos atendidos',
+  postTopics: 'Temas',
+  taskDone: 'Concluído',
+  taskPending: 'Pendente',
+}
+
+const en: typeof pt = {
+  skipToContent: 'Skip to content',
+  homeLink: (site: string) => `${site}: home page`,
+  mainNav: 'Main navigation',
+  menu: 'Menu',
+  openMenu: 'Open menu',
+  closeMenu: 'Close menu',
+  language: 'Language',
+  switchTo: 'View this page in English',
+  opensNewTab: '(opens in a new tab)',
+  breadcrumb: 'Breadcrumb',
+  home: 'Home',
+  pagination: { label: 'Pagination', previous: 'Previous', next: 'Next', page: 'Page ' },
+  expandable: { open: 'See more', close: 'See less' },
+  media: { access: 'Open', readPost: 'Read article' },
+  footer: {
+    tagline: 'Applied AI, governance from day one and sustainability as a differentiator.',
+    contactTitle: 'Contact',
+    contactForm: 'Contact form',
+    partners: 'Partners and certifications',
+    divisionOf: 'A division of',
+    copyright: (year: number) => `© ${year} Sociabilis. All rights reserved.`,
+  },
+  valueIconsTitle: 'How Sociabilis AI Labs works',
+  offerIndex: 'Our offerings',
+  audienceSegments: 'Segments we serve',
+  postTopics: 'Topics',
+  taskDone: 'Done',
+  taskPending: 'Pending',
+}
+
+export const UI: Record<Locale, typeof pt> = { pt, en }

@@ -22,7 +22,11 @@ export interface TocItem {
 }
 
 export interface PostMeta {
+  /** Idioma, definido pela pasta (content/blog/pt ou content/blog/en). */
+  lang: 'pt' | 'en'
   slug: string
+  /** Slug da versão do mesmo post no outro idioma, se houver. */
+  translation?: string
   title: string
   description: string
   /** AAAA-MM-DD */

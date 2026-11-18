@@ -19,7 +19,7 @@ app.set('trust proxy', /^\d+$/.test(trustProxy) ? Number(trustProxy) : trustProx
 
 const CSP = [
   "default-src 'self'",
-  // reCAPTCHA v2: https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website.-how-can-i-configure-it-to-work-with-recaptcha
+  // reCAPTCHA v3: https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website.-how-can-i-configure-it-to-work-with-recaptcha
   "script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/",
   "frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/",
   "connect-src 'self'",
@@ -87,17 +87,34 @@ function rateLimit(req, res, next) {
   next()
 }
 
+/**
+ * reCAPTCHA v3: o token precisa ser válido, da ação "contact" (a mesma do
+ * ContactForm) e ter pontuação mínima (0 = provável robô, 1 = provável pessoa).
+ */
+const RECAPTCHA_ACTION = 'contact'
+const RECAPTCHA_MIN_SCORE = Number(process.env.RECAPTCHA_MIN_SCORE ?? 0.5)
+
 async function verifyCaptcha(token) {
   const secret = process.env.RECAPTCHA_SECRET_KEY
   if (!secret) return true // verificação desativada (ver .env.example)
-  if (typeof token !== 'string' || !token) return false
+  if (typeof token !== 'string' || !token || token.length > 4000) return false
   const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
   })
   const data = await res.json()
-  return data.success === true
+  const ok = data.success === true && data.action === RECAPTCHA_ACTION && Number(data.score) >= RECAPTCHA_MIN_SCORE
+  if (!ok) {
+    // Sem dados do visitante: só o necessário para diagnosticar chave, ação ou pontuação.
+    console.warn('reCAPTCHA recusado:', {
+      success: data.success,
+      action: data.action,
+      score: data.score,
+      errors: data['error-codes'],
+    })
+  }
+  return ok
 }
 
 /** Texto de uma linha: sem quebras (evita injeção no assunto do e-mail). */

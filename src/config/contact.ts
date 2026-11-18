@@ -22,7 +22,7 @@ export const CONTACT = {
   instagram: 'https://instagram.com/sociabilis.io' as string | null,
 }
 
-// Google reCAPTCHA v2 site key — obtain at https://www.google.com/recaptcha/admin
-// The secret key goes in the server .env (RECAPTCHA_SECRET_KEY), never here
-export const RECAPTCHA_SITE_KEY: string | null = '6LfpbSwtAAAAAGyagAA7KJ2NPk5BqvvTi3ofgCV9'
+// Chave do site do Google reCAPTCHA v3 (pública) — https://www.google.com/recaptcha/admin
+// A chave secreta fica só na variável de ambiente do servidor (RECAPTCHA_SECRET_KEY), nunca aqui
+export const RECAPTCHA_SITE_KEY: string | null = '6LctqiYuAAAAAHevu5ByDG8NPbqVInx7TShcM0kv'
 

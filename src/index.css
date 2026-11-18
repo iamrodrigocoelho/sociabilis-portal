@@ -77,3 +77,12 @@
       transform 300ms ease-out;
   }
 }
+
+/*
+ * reCAPTCHA v3: o selo flutuante fica oculto porque o formulário exibe o aviso
+ * exigido pelo Google ("protegido pelo reCAPTCHA... Política de Privacidade e
+ * Termos de Serviço"), como permite a FAQ do reCAPTCHA. Não remover esse aviso.
+ */
+.grecaptcha-badge {
+  visibility: hidden;
+}

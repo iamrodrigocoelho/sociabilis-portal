@@ -1,46 +1,50 @@
+import type { ReactNode } from 'react'
+import { Eyebrow } from './Eyebrow'
+
 interface SectionHeaderProps {
   eyebrow?: string
-  title: string
-  subtitle?: string
+  title: ReactNode
+  subtitle?: ReactNode
+  /** Nível do título. Use `h1` apenas no hero da página. */
+  as?: 'h1' | 'h2'
+  /** Tamanho do título: `lg` (display-lg) ou `xl` (display-xl, hero). */
+  size?: 'lg' | 'xl' | 'md'
   align?: 'left' | 'center'
   theme?: 'light' | 'dark'
-  className?: string
   id?: string
+  className?: string
 }
+
+const SIZES = { xl: 'text-display-xl', lg: 'text-display-lg', md: 'text-display-md' }
 
 export function SectionHeader({
   eyebrow,
   title,
   subtitle,
-  align = 'center',
+  as: Heading = 'h2',
+  size = 'lg',
+  align = 'left',
   theme = 'light',
-  className = '',
   id,
+  className = 'mb-3xl lg:mb-4xl',
 }: SectionHeaderProps) {
-  const alignClass = align === 'center' ? 'text-center' : 'text-left'
-  const eyebrowColor = theme === 'dark' ? 'text-canvas/50' : 'text-body-mid'
-  const titleColor = theme === 'dark' ? 'text-canvas' : 'text-ink'
-  const subtitleColor = theme === 'dark' ? 'text-canvas/70' : 'text-body'
-  const maxWidthClass = align === 'center' ? 'mx-auto' : ''
-
+  const dark = theme === 'dark'
+  const centered = align === 'center'
   return (
-    <div className={`${alignClass} mb-12 md:mb-16 ${className}`}>
+    <div className={`${centered ? 'mx-auto text-center' : ''} max-w-3xl ${className}`}>
       {eyebrow && (
-        <p
-          className={`${eyebrowColor} text-[13px] font-medium tracking-[1.2px] uppercase mb-3`}
-        >
+        <Eyebrow theme={dark ? 'night' : 'light'} className="mb-lg">
           {eyebrow}
-        </p>
+        </Eyebrow>
       )}
-      <h2
-        id={id}
-        className={`${titleColor} text-3xl md:text-4xl lg:text-5xl font-medium leading-tight mb-5 max-w-3xl ${maxWidthClass}`}
-      >
+      <Heading id={id} className={`${SIZES[size]} text-balance ${dark ? 'text-on-night' : 'text-ink'}`}>
         {title}
-      </h2>
+      </Heading>
       {subtitle && (
         <p
-          className={`${subtitleColor} text-lg leading-relaxed max-w-2xl ${maxWidthClass}`}
+          className={`mt-xl max-w-prose text-body-lg ${centered ? 'mx-auto' : ''} ${
+            dark ? 'text-on-night-mid' : 'text-body'
+          }`}
         >
           {subtitle}
         </p>

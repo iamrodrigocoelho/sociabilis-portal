@@ -4,6 +4,11 @@ export const SITE_CONFIG = {
   name: 'Sociabilis AI Labs',
   tagline: 'IA aplicada, governança desde o início e sustentabilidade como diferencial.',
   mainSite: 'https://sociabilis.com.br',
+  // URL pública deste site (canonical, Open Graph, sitemap, RSS). Sem barra final.
+  url: 'https://sociabilis.com.br',
+  // Imagem Open Graph padrão (ideal: 1200×630). [ASSET] substituir por arte dedicada.
+  defaultOgImage: '/img/logo-big-sociabilis.png',
+  locale: 'pt_BR',
   copyright: `© ${new Date().getFullYear()} Sociabilis. Todos os direitos reservados.`,
 }
 
@@ -26,8 +31,3 @@ export const CONTACT = {
 // The secret key goes in the server .env (RECAPTCHA_SECRET_KEY), never here
 export const RECAPTCHA_SITE_KEY: string | null = '6LfpbSwtAAAAAGyagAA7KJ2NPk5BqvvTi3ofgCV9'
 
-export function getContactHref(): string {
-  if (CONTACT.email) return `mailto:${CONTACT.email}`
-  if (CONTACT.whatsapp) return `https://wa.me/${CONTACT.whatsapp}`
-  return '#contato'
-}

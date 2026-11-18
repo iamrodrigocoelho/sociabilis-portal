@@ -1,1006 +1,389 @@
-# PRD - Website Sociabilis AI Labs
+# PRD: Website Sociabilis AI Labs (v2, redesign + IA no seu negócio + Blog)
 
-## 1. Visão geral do produto
+> **Versão 2.0, novembro de 2026.** Substitui a v1 (landing page one-page).
+> Mudanças principais: (1) redesign da home com estrutura inspirada na Dharma AI e identidade visual da Sociabilis; (2) nova página **IA no seu negócio**; (3) novo **Blog** em Markdown; (4) site passa de one-page para **multipágina com rotas**.
+>
+> Itens marcados com **[VALIDAR]** são propostas de texto que a Sociabilis precisa confirmar antes da publicação. Itens marcados com **[ASSET]** dependem de arquivos ou informações a fornecer.
 
-### Nome do projeto
-**Website Sociabilis AI Labs**
+---
+
+## 1. Visão geral
 
 ### Produto
 Website institucional e comercial da **Sociabilis AI Labs**, divisão de inteligência artificial aplicada da Sociabilis.
 
-### Objetivo do website
-Criar uma página institucional moderna, responsiva, performática e segura para apresentar a Sociabilis AI Labs como uma divisão de implantação de IA responsável e sustentável.
+### Objetivo da v2
+1. Modernizar a home com uma estrutura de **laboratório de IA aplicada** (referência: dharma-ai.com.br), mais enxuta, editorial e com prova social.
+2. Criar a página **IA no seu negócio**, que detalha as 6 ofertas como caminhos de contratação (referência: dharma-ai.com.br/ia-para-sua-empresa).
+3. Criar um **Blog** para autoridade, SEO e nutrição de leads, também alimentando a seção "Mídia e publicações".
+4. Manter o formulário de contato existente (Resend + reCAPTCHA), agora com campo de interesse por oferta.
 
-O site deve comunicar claramente que a Sociabilis AI Labs atua como uma **AI Deployment Company**, ajudando empresas responsáveis, B Corps, PMEs e negócios de impacto a implantarem soluções de IA na operação real do negócio, com governança, eficiência e menor impacto socioambiental.
+### Referências obrigatórias
+- Design system: `docs/DESIGN.md` (v2)
+- Logotipo: `img/logo-big-sociabilis.png` (também `public/img/`)
+- Configuração de contato: `src/config/contact.ts`
 
-### Referências internas obrigatórias
-O Claude Code deve utilizar os seguintes arquivos já existentes no projeto:
-
-- Logotipo: `img/logo-big-sociabilis.png`
-- Design system: `docs/DESIGN.md`
-
-Antes de implementar, o Claude Code deve ler o arquivo `docs/DESIGN.md` e aplicar suas diretrizes visuais, incluindo cores, tipografia, espaçamentos, botões, componentes, grid, tokens visuais e demais padrões definidos.
-
----
-
-## 2. Contexto da marca
-
-A Sociabilis ajuda negócios a se tornarem mais competitivos por meio de inovação e sustentabilidade.
-
-A Sociabilis AI Labs é a divisão especializada em inteligência artificial aplicada, com foco em:
-
-- AI Deployment;
-- Forward Deployed AI;
-- copilotos internos;
-- agentes de IA;
-- automação inteligente;
-- RAG;
-- governança de IA;
-- segurança e privacidade;
-- IA sustentável;
-- mitigação da pegada socioambiental da IA.
-
-A proposta central é transformar IA em resultado real, não apenas em experimentos isolados.
+### Sobre a referência (Dharma AI)
+A Dharma é referência de **estrutura, ritmo e linguagem visual**. É proibido copiar textos, números, ícones, ilustrações, vídeos ou logotipos do site da Dharma. Todo o conteúdo deve ser da Sociabilis.
 
 ---
 
-## 3. Posicionamento
+## 2. Marca e posicionamento (mantido da v1)
 
-### Posicionamento principal
-**Sociabilis AI Labs é um laboratório de implantação de IA responsável e sustentável para empresas responsáveis, B Corps e negócios de impacto.**
+**Posicionamento:** Sociabilis AI Labs é um laboratório de implantação de IA responsável e sustentável para empresas responsáveis, B Corps e negócios de impacto.
 
-### Descrição curta
-**AI Deployment Lab for Sustainable Business Transformation**
+**Descrição curta:** AI Deployment Lab for Sustainable Business Transformation.
 
-### Frase principal
-**Implantamos IA responsável e sustentável no coração da operação do seu negócio.**
+**Frase principal:** Implantamos IA responsável e sustentável no coração da operação do seu negócio.
 
-### Subfrase
-A Sociabilis AI Labs ajuda empresas responsáveis a transformarem IA em resultado real por meio de copilotos, agentes, automações e soluções com RAG, sempre com governança, eficiência e atenção aos impactos socioambientais.
+**Foco:** AI Deployment, Forward Deployed AI, copilotos internos, agentes, automação inteligente, RAG, governança, segurança e privacidade, IA sustentável e mitigação da pegada socioambiental da IA.
 
----
+## 3. Público-alvo (mantido da v1)
 
-## 4. Público-alvo
+Empresas responsáveis, B Corps, negócios de impacto, PMEs em transformação digital, consultorias ESG, startups, terceiro setor e áreas de inovação, tecnologia, sustentabilidade, produto e operações.
 
-O website deve falar principalmente com:
-
-- empresas responsáveis;
-- B Corps;
-- negócios de impacto socioambiental;
-- PMEs em transformação digital;
-- consultorias ESG;
-- startups;
-- organizações do terceiro setor;
-- áreas de inovação;
-- áreas de sustentabilidade;
-- áreas de tecnologia;
-- áreas de produto e operações.
-
-### Perfil do visitante
-O visitante ideal é um decisor ou influenciador que busca aplicar IA no negócio, mas tem preocupação com segurança, governança, custo, eficiência, reputação, sustentabilidade e impacto.
-
-Exemplos:
-
-- CEOs;
-- fundadores;
-- heads de inovação;
-- heads de tecnologia;
-- gestores de sustentabilidade;
-- gestores de produto;
-- gestores de operações;
-- consultores ESG;
-- líderes de transformação digital.
+Perfil do visitante: decisor ou influenciador (CEO, fundador, head de inovação/tecnologia, gestor de sustentabilidade, produto ou operações) que quer aplicar IA com segurança, governança, controle de custo e responsabilidade socioambiental.
 
 ---
 
-## 5. Objetivos de negócio
+## 4. Escopo da v2
 
-O website deve:
+### Páginas e rotas
 
-1. Posicionar a Sociabilis AI Labs como uma divisão especializada em IA aplicada, responsável e sustentável.
-2. Explicar de forma clara o conceito de AI Deployment Company.
-3. Apresentar as principais ofertas da divisão.
-4. Gerar leads qualificados.
-5. Direcionar visitantes para contato comercial.
-6. Transmitir confiança, modernidade, responsabilidade e visão técnica.
-7. Reforçar a conexão entre IA, inovação, sustentabilidade e competitividade.
-8. Preparar a base para futuras páginas de produtos, como AI Carbon Tracker e CNPJ Neutro.
+| Rota | Página | Status |
+|---|---|---|
+| `/` | Home (redesign) | Alterar |
+| `/ia-no-seu-negocio` | IA no seu negócio | Nova |
+| `/blog` | Lista de posts | Nova |
+| `/blog/pagina/:n` | Paginação do blog | Nova |
+| `/blog/tag/:tag` | Posts por tag | Nova |
+| `/blog/:slug` | Post | Nova |
+| `/politica-de-privacidade` | Política de privacidade | Nova [ASSET: texto ou URL externa] |
+| `*` | 404 | Nova |
+| `/sitemap.xml`, `/robots.txt`, `/blog/rss.xml` | Arquivos de SEO | Novos/atualizar |
 
----
+### Navegação principal (header)
+- Início → `/`
+- IA no seu negócio → `/ia-no-seu-negocio`
+- Blog → `/blog`
+- Sobre → `/#sobre` (âncora para o manifesto)
+- CTA: **Fale conosco** → abre o modal de contato (fallback: `/#contato`)
 
-## 6. Objetivos de experiência do usuário
-
-O usuário deve conseguir entender em menos de 10 segundos:
-
-- o que é a Sociabilis AI Labs;
-- para quem ela é;
-- qual problema ela resolve;
-- quais soluções oferece;
-- qual é seu diferencial;
-- como entrar em contato.
-
-A experiência deve ser:
-
-- simples;
-- moderna;
-- responsiva;
-- acessível;
-- objetiva;
-- visualmente alinhada à Sociabilis;
-- otimizada para dispositivos móveis;
-- rápida em conexões móveis;
-- clara para públicos técnicos e não técnicos.
+Âncoras devem funcionar a partir de qualquer página (ex.: em `/blog`, "Sobre" navega para `/` e rola até `#sobre`).
 
 ---
 
-## 7. Escopo do MVP
+## 5. Requisitos funcionais: Home (`/`)
 
-### Tipo de website
-Landing page institucional one-page.
+Ordem das seções (espelha o ritmo da referência):
 
-### Páginas
-Para o MVP, criar uma única página principal:
+### RF01: Header
+Ver seção 4. Sticky, logo à esquerda, links, CTA. Menu mobile acessível.
 
-- `/` ou rota equivalente da home.
+### RF02: Hero
+- **Eyebrow:** Sociabilis AI Labs
+- **Título:** Implantamos IA responsável e sustentável no coração da operação do seu negócio.
+- **Lead:** Copilotos, agentes, automações e soluções com RAG para empresas responsáveis, B Corps e negócios de impacto, com governança, eficiência e atenção aos impactos socioambientais.
+- **CTAs:** "Fale conosco" (primário, abre modal) · "Conheça as soluções" (secundário → `/ia-no-seu-negocio`)
+- Visual: ilustração abstrata (rede/nós/padrão low-poly inspirado no pássaro do logo). Sem robôs.
 
-### Seções obrigatórias da página
+### RF03: Ícones de valor (4 colunas)
+Sem métricas numéricas (não há cases com números validados). Cada item tem ícone, título e uma linha:
+1. **Implantação real**: IA conectada aos processos da operação, não só pilotos.
+2. **Governança desde o início**: segurança, privacidade e rastreabilidade no desenho da solução.
+3. **Eficiência e menor pegada**: escolha adequada de modelos, menos desperdício técnico, financeiro e ambiental.
+4. **Impacto mensurável**: indicadores de produtividade, adoção, custo e impacto acompanhados.
 
-1. Header com logo e navegação
-2. Hero section
-3. Seção de problema
-4. Seção de proposta de valor
-5. Seção de pilares
-6. Seção de ofertas
-7. Seção de metodologia
-8. Seção de diferenciais
-9. Seção de público-alvo
-10. Seção de chamada final
-11. Footer
+### RF04: Faixa de parceiros e certificações
+- Rótulo: "Parceiros e certificações"
+- Logos monocromáticos [ASSET: SVG/PNG de cada parceiro/certificação + autorização de uso].
+- Configurável via `src/content/logos.ts` (nome, arquivo, URL opcional, categoria `partner` | `client`).
 
----
+### RF05: Manifesto (`#sobre`), faixa escura
+- **Eyebrow:** Nossa missão
+- **Título [VALIDAR]:** Fazer a IA trabalhar a favor dos negócios e do planeta.
+- **Frases curtas, uma por linha [VALIDAR]:**
+  - IA não gera valor quando fica presa em pilotos.
+  - Não precisamos do maior modelo. Precisamos do modelo **certo**.
+  - Eficiência também é sustentabilidade.
+  - Governança não é freio. É o que permite escalar com confiança.
+- Parágrafo curto: a Sociabilis AI Labs atua como uma AI Deployment Company. Entramos no contexto real do cliente, priorizamos casos de uso de alto impacto e implantamos soluções que podem ser medidas, governadas e evoluídas.
+- Opcional: vídeo institucional [ASSET], com carregamento sob demanda (facade, sem iframe até o clique).
 
-## 8. Requisitos funcionais
+### RF06: Pilares (A, B, C)
+Título: **Três pilares para uma IA que gera resultado real.**
+- **A · Deploy AI**: implantamos soluções conectadas aos processos reais: copilotos internos, agentes, automações e sistemas com RAG.
+- **B · Govern AI**: bases de governança, segurança, privacidade, rastreabilidade e uso responsável.
+- **C · Sustain AI**: eficiência, escolha adequada de modelos, redução de desperdícios e mensuração da pegada socioambiental da IA.
 
-### RF01 - Header
+### RF07: Linhas de negócio (6 ofertas)
+Título: **Como podemos ajudar.**
+Grid 2-up (desktop) com `offer-card`: ícone, nome, uma frase e "Veja mais" → `/ia-no-seu-negocio#<slug>`.
 
-O header deve conter:
+| Oferta | Slug | Frase |
+|---|---|---|
+| AI Opportunity & Impact Scan | `impact-scan` | Diagnóstico para identificar onde a IA gera mais valor no seu negócio. |
+| RAG Starter | `rag-starter` | Copilotos com a base de conhecimento da sua empresa. |
+| Forward Deployed AI Pod | `forward-deployed-pod` | Um squad da Sociabilis implantando IA junto ao seu time. |
+| AI Agents & Automation | `agents-automation` | Agentes e automações que apoiam ou executam tarefas operacionais. |
+| Sustainable AI Assessment | `sustainable-ai-assessment` | Maturidade, governança e pegada socioambiental do seu uso de IA. |
+| AI Carbon Tracker | `ai-carbon-tracker` | Estime, acompanhe e comunique a pegada climática da IA generativa. |
 
-- logotipo da Sociabilis usando o arquivo `img/logo-big-sociabilis.png`;
-- navegação com links âncora para as seções principais;
-- botão de CTA.
+### RF08: CTA intermediário (faixa escura)
+- Frase [VALIDAR]: **Sua empresa não precisa só testar IA. Precisa implantar com estratégia, governança e impacto positivo.**
+- Botão: "Quero implantar IA com governança" → abre modal.
 
-Links sugeridos:
+### RF09: Mídia e publicações
+- Título: **Mídia e publicações**
+- 3 cards mais recentes, mesclando posts do blog e itens externos (podcasts, artigos, entrevistas).
+- Badge de tipo: Artigo (post do blog) · Podcast · Na mídia.
+- "Ver todos" → `/blog`.
+- Itens externos em `src/content/media.ts` (título, tipo, veículo, data, URL externa, thumbnail opcional) [ASSET: lista de podcasts/artigos/mídia com links].
 
-- O que fazemos
-- Ofertas
-- Metodologia
-- Diferenciais
-- Contato
+### RF10: Clientes
+- Rótulo: "Empresas que confiam na Sociabilis"
+- Logos monocromáticos [ASSET: logos + autorização de cada cliente para exibição].
+- Se a lista tiver menos de 4 logos, ocultar a seção (feature flag no arquivo de conteúdo).
 
-CTA sugerido:
+### RF11: Contato (`#contato`)
+Mantém o formulário atual, com estas mudanças:
+- Campos: nome*, e-mail corporativo*, empresa*, cargo, **interesse*** (checkboxes, ao menos 1), mensagem.
+- Opções de interesse: as 6 ofertas + "Quero entender por onde começar".
+- Aviso de privacidade com link para `/politica-de-privacidade`.
+- O mesmo formulário é usado no **modal de contato** (`<dialog>`), aberto pelos CTAs. Um CTA pode pré-selecionar um interesse (ex.: "Falar sobre RAG Starter").
+- `server.js`: aceitar e validar `cargo` e `interesses[]` (lista branca com as opções válidas) e incluí-los no e-mail.
 
-- **Fale com a Sociabilis**
+### RF12: Footer
+Fundo escuro. Logo, descrição ("IA aplicada, governança desde o início e sustentabilidade como diferencial."), colunas: Navegação · IA no seu negócio (6 ofertas) · Conteúdo (Blog, Mídia) · Contato (dados de `contact.ts`, sem inventar valores). Redes sociais se configuradas. Faixa de parceiros e certificações. Link para a política de privacidade. Copyright `© {ano} Sociabilis. Todos os direitos reservados.`
 
-Comportamento:
-
-- Em desktop, exibir navegação horizontal.
-- Em mobile, exibir menu responsivo.
-- Header deve permanecer limpo, sem excesso de elementos.
-- Pode ser fixo ou não, de acordo com o padrão do design system.
-
----
-
-### RF02 - Hero section
-
-A primeira dobra deve comunicar imediatamente a proposta de valor.
-
-Conteúdo sugerido:
-
-**Eyebrow:**  
-Sociabilis AI Labs
-
-**Título:**  
-Implantamos IA responsável e sustentável no coração da operação do seu negócio.
-
-**Subtítulo:**  
-Ajudamos empresas responsáveis, B Corps e negócios de impacto a transformarem IA em resultado real por meio de copilotos, agentes, automações e soluções com RAG, sempre com governança, eficiência e atenção aos impactos socioambientais.
-
-**CTAs:**  
-- Conheça nossas soluções
-- Fale com a Sociabilis
-
-Elementos visuais:
-
-- Usar o logo da Sociabilis de forma elegante.
-- Utilizar elementos gráficos inspirados em IA, redes, dados, sustentabilidade, impacto ou tecnologia limpa.
-- Evitar visual genérico de robôs ou imagens artificiais exageradas.
-- Manter estética profissional, moderna e confiável.
-
----
-
-### RF03 - Seção de problema
-
-Objetivo: mostrar que muitas empresas testam IA, mas não conseguem implantar com segurança e escala.
-
-Título sugerido:
-
-**IA não gera valor quando fica presa em pilotos isolados.**
-
-Texto sugerido:
-
-Muitas organizações já utilizam ferramentas de IA, mas ainda enfrentam dificuldade para transformar experimentos em soluções operacionais. O resultado são iniciativas desconectadas, baixa governança, riscos de segurança, custos pouco visíveis e impactos socioambientais ignorados.
-
-Cards sugeridos:
-
-1. Ferramentas desconectadas
-2. Falta de integração aos processos
-3. Riscos de dados e privacidade
-4. Baixa governança
-5. Custos e impactos invisíveis
-6. Dificuldade de escalar pilotos
+### Conteúdo da v1 que sai da home
+- Seção **Problema**: o conteúdo é absorvido pelo manifesto.
+- **Proposta de valor**: vira os ícones de valor (RF03).
+- **Metodologia**, **Diferenciais** e **Público-alvo**: migram para a página IA no seu negócio.
 
 ---
 
-### RF04 - Seção de proposta de valor
+## 6. Requisitos funcionais: IA no seu negócio (`/ia-no-seu-negocio`)
 
-Título sugerido:
+### RF20: Hero
+- **Eyebrow:** IA no seu negócio
+- **Título [VALIDAR]:** IA aplicada ao que a sua operação realmente precisa.
+- **Intro:** Trabalhamos com empresas que querem sair do piloto e colocar IA para funcionar com governança, eficiência e impacto mensurável.
+- **`arrow-statement`:** → IA gera resultado quando parte de um problema real, de dados da própria operação e de critérios claros de sucesso. Por isso organizamos nosso trabalho em seis caminhos, do diagnóstico à operação contínua.
+- CTA: "Não sabe por onde começar? Fale conosco" → modal com interesse "Quero entender por onde começar".
 
-**Da estratégia à implantação: IA aplicada com governança e impacto positivo.**
+### RF21: Índice de ofertas
+Chips com âncoras para as 6 ofertas (sticky no desktop). Destacar o chip da seção visível (IntersectionObserver).
 
-Texto sugerido:
+### RF22: Bloco de oferta (template, repetido 6×)
+Cada oferta é um `offer-block` com `id` igual ao slug (RF07) e esta estrutura:
 
-A Sociabilis AI Labs atua como uma AI Deployment Company. Entramos no contexto real do cliente, entendemos seus processos, priorizamos casos de uso de alto impacto e implantamos soluções de IA que podem ser medidas, governadas e evoluídas.
+1. Rótulo `01`–`06` + nome
+2. **Pitch**: 1–2 frases
+3. **Para quem é**: qualificador
+4. **O que entregamos**: 3 `feature-item` (ícone + título + linha)
+5. **Ver mais** (expansível): benefícios adicionais
+6. **Como funciona**: etapas numeradas
+7. **Entregáveis / resultados**: lista com `→`
+8. **Casos de uso**: lista numerada (quando aplicável)
+9. **CTA**: "Falar sobre <oferta>" → modal com o interesse pré-selecionado
 
-Blocos sugeridos:
+O conteúdo de cada oferta fica em um arquivo de dados tipado (`src/content/offers.ts`), não hardcoded no JSX, para ser reutilizado na home, no footer, no formulário e nesta página.
 
-- Implantar IA na operação
-- Governar riscos e uso responsável
-- Reduzir desperdícios e impactos
-- Medir resultados e evolução
+#### 01 · AI Opportunity & Impact Scan (`impact-scan`)
+- **Pitch:** Diagnóstico para identificar onde a IA pode gerar mais valor no negócio, com riscos e prioridades claros.
+- **Para quem é [VALIDAR]:** empresas que querem começar ou reorganizar sua jornada de IA com foco em resultado.
+- **O que entregamos:** mapa de oportunidades · matriz impacto x esforço · roadmap de 30, 60 e 90 dias.
+- **Ver mais:** riscos e dependências mapeados · visão de custo e de impacto socioambiental de cada caso de uso · recomendação de arquitetura (RAG, SLMs, automação).
+- **Como funciona [VALIDAR]:** 1. Imersão (entrevistas e processos) · 2. Mapeamento e priorização · 3. Apresentação do roadmap.
+- **Entregáveis:** mapa de oportunidades; matriz impacto x esforço; riscos e dependências; roadmap 30/60/90.
 
----
+#### 02 · RAG Starter (`rag-starter`)
+- **Pitch:** Implantação de copilotos que respondem com base no conhecimento da sua empresa: políticas, documentos e procedimentos.
+- **Para quem é [VALIDAR]:** empresas com conhecimento disperso em documentos e equipes que perdem tempo procurando informação.
+- **O que entregamos [VALIDAR]:** base de conhecimento estruturada · copilot integrado ao canal do time · governança de acesso e fontes citadas.
+- **Ver mais [VALIDAR]:** respostas com referência à fonte · controle de quem acessa o quê · monitoramento de qualidade · escolha de modelo eficiente.
+- **Como funciona [VALIDAR]:** 1. Curadoria das fontes · 2. Construção e testes · 3. Implantação e acompanhamento.
+- **Casos de uso:** atendimento interno; políticas e procedimentos; documentos ESG; suporte técnico; RH; jurídico; operações.
 
-### RF05 - Seção de pilares
+#### 03 · Forward Deployed AI Pod (`forward-deployed-pod`)
+- **Pitch:** Um squad da Sociabilis AI Labs atuando próximo ao seu time para implantar IA no contexto real do negócio.
+- **Para quem é [VALIDAR]:** organizações com vários casos de uso, dados sensíveis ou necessidade de acelerar a implantação com acompanhamento contínuo.
+- **O que entregamos [VALIDAR]:** squad dedicado · implantação integrada aos processos · transferência de conhecimento para o time interno.
+- **Perfis possíveis:** AI Deployment Lead; Forward Deployed AI Engineer; Product/Process Strategist; Data/RAG Engineer; Responsible & Sustainable AI Specialist.
+- **Como funciona:** usa a metodologia completa (RF23).
 
-Título sugerido:
+#### 04 · AI Agents & Automation (`agents-automation`)
+- **Pitch:** Agentes de IA e automações inteligentes para apoiar ou executar tarefas operacionais.
+- **Para quem é [VALIDAR]:** times com tarefas repetitivas, alto volume de documentos ou fluxos entre sistemas.
+- **O que entregamos [VALIDAR]:** agentes desenhados para o processo · integrações com APIs e workflows · monitoramento e pontos de supervisão humana.
+- **Casos de uso:** triagem de e-mails; análise de documentos; geração de relatórios; coleta de evidências ESG; suporte interno; integração com APIs e workflows.
 
-**Três pilares para uma IA que gera resultado real.**
+#### 05 · Sustainable AI Assessment (`sustainable-ai-assessment`)
+- **Pitch:** Avaliação da maturidade, governança e impacto socioambiental do uso de IA na organização.
+- **Para quem é [VALIDAR]:** empresas que já usam IA e precisam de visibilidade de riscos, custos e pegada.
+- **Entregáveis:** inventário de ferramentas; análise de riscos; recomendações de governança; estimativa de consumo, custo e emissões; plano de otimização e mitigação.
+- Linguagem: "estimativa", nunca "neutralização" ou "compensação" sem metodologia definida.
 
-Criar três cards principais:
+#### 06 · AI Carbon Tracker (`ai-carbon-tracker`)
+- **Pitch:** Produto da Sociabilis para estimar, acompanhar e comunicar a pegada climática associada ao uso de IA generativa.
+- **Para quem é [VALIDAR]:** empresas que querem medir e reportar o impacto do seu uso de IA (ex.: relatórios ESG).
+- **O que entregamos [VALIDAR]:** estimativas de emissões por uso · acompanhamento ao longo do tempo · material para comunicação e relatórios.
+- CTA: "Quero conhecer o AI Carbon Tracker". Deixar estrutura pronta para uma futura página própria.
 
-#### 1. Deploy AI
-Implantamos soluções de IA conectadas aos processos reais da empresa, como copilotos internos, agentes, automações e sistemas com RAG.
+### RF23: Como trabalhamos
+As 7 etapas da v1 em `steps`: Diagnosticar · Priorizar · Prototipar · Implantar · Medir · Otimizar · Mitigar (textos da v1).
 
-#### 2. Govern AI
-Criamos bases de governança, segurança, privacidade, rastreabilidade e uso responsável para que a IA possa ser adotada com confiança.
+### RF24: Por que a Sociabilis AI Labs
+Os 6 diferenciais da v1 em grid 3-up: IA aplicada, não apenas conceitual · Modelo Forward Deployed AI · Sustentabilidade como premissa · Governança desde o início · Arquitetura eficiente · Foco em negócios responsáveis.
 
-#### 3. Sustain AI
-Aplicamos princípios de eficiência, escolha adequada de modelos, redução de desperdícios e mensuração da pegada socioambiental da IA.
+### RF25: Para quem
+Texto de público-alvo da v1, com os segmentos em chips.
 
----
-
-### RF06 - Seção de ofertas
-
-Título sugerido:
-
-**Ofertas para acelerar sua jornada de IA responsável.**
-
-Exibir cards para as ofertas abaixo.
-
-#### AI Opportunity & Impact Scan
-Diagnóstico para identificar onde a IA pode gerar mais valor no negócio.
-
-Entregáveis:
-
-- mapa de oportunidades;
-- matriz impacto x esforço;
-- riscos e dependências;
-- roadmap de 30, 60 e 90 dias.
-
-#### RAG Starter
-Implantação de copilotos com base de conhecimento própria da empresa.
-
-Casos de uso:
-
-- atendimento interno;
-- políticas e procedimentos;
-- documentos ESG;
-- suporte técnico;
-- RH;
-- jurídico;
-- operações.
-
-#### Forward Deployed AI Pod
-Squad da Sociabilis AI Labs atuando próximo ao cliente para implantar IA no contexto real do negócio.
-
-Perfis possíveis:
-
-- AI Deployment Lead;
-- Forward Deployed AI Engineer;
-- Product/Process Strategist;
-- Data/RAG Engineer;
-- Responsible & Sustainable AI Specialist.
-
-#### AI Agents & Automation
-Criação de agentes de IA e automações inteligentes para apoiar ou executar tarefas operacionais.
-
-Exemplos:
-
-- triagem de e-mails;
-- análise de documentos;
-- geração de relatórios;
-- coleta de evidências ESG;
-- suporte interno;
-- integração com APIs e workflows.
-
-#### Sustainable AI Assessment
-Avaliação da maturidade, governança e impacto socioambiental do uso de IA na organização.
-
-Entregáveis:
-
-- inventário de ferramentas;
-- análise de riscos;
-- recomendações de governança;
-- estimativa de consumo, custo e emissões;
-- plano de otimização e mitigação.
-
-#### AI Carbon Tracker
-Produto da Sociabilis para estimar, acompanhar e comunicar a pegada climática associada ao uso de IA generativa.
+### RF26: CTA final
+Faixa escura com título da v1 + botão "Fale conosco".
 
 ---
 
-### RF07 - Seção de metodologia
+## 7. Requisitos funcionais: Blog
 
-Título sugerido:
+### RF30: Conteúdo em Markdown no repositório
+- Posts em `content/blog/<slug>.md` (um arquivo por post).
+- Imagens em `public/blog/<slug>/` (WebP/AVIF, largura máx. 1600px).
+- Frontmatter obrigatório, validado no build (o build falha se um campo obrigatório faltar):
 
-**Como trabalhamos**
+```yaml
+---
+title: "Título do post"            # obrigatório, ≤ 70 caracteres recomendado
+slug: "titulo-do-post"             # obrigatório, kebab-case, único
+description: "Resumo para SEO"     # obrigatório, 120–160 caracteres
+date: 2026-11-18                   # obrigatório (publicação)
+updated: 2026-11-20                # opcional
+author: "Nome Sobrenome"           # obrigatório (deve existir em src/content/authors.ts)
+tags: ["IA sustentável", "RAG"]    # obrigatório, 1–4 tags
+cover: "/blog/titulo-do-post/capa.webp"  # opcional
+coverAlt: "Descrição da capa"      # obrigatório se houver cover
+draft: false                       # true = não publicado
+---
+```
 
-Exibir a metodologia em etapas visuais.
+- Autores em `src/content/authors.ts` (nome, cargo, foto opcional, LinkedIn opcional).
+- Posts com `draft: true` ou data futura não aparecem no build de produção.
 
-Etapas:
+### RF31: Listagem (`/blog`)
+- Hero curto: eyebrow "Blog", título [VALIDAR] "Ideias sobre IA aplicada, governança e sustentabilidade".
+- Filtro por tag (chips → `/blog/tag/:tag`).
+- Grid 3-up de `post-card`, ordenado por data desc, 9 por página, com paginação.
+- Estado vazio amigável.
 
-1. Diagnosticar  
-Entendemos o negócio, os processos, os dados e as principais dores.
+### RF32: Página do post (`/blog/:slug`)
+- Breadcrumb (Início › Blog › Título), título, autor, data (formato pt-BR), tempo de leitura calculado, tags, capa.
+- Corpo renderizado a partir do Markdown **sem HTML bruto** (sem `dangerouslySetInnerHTML`; usar renderizador seguro, ex.: `react-markdown` sem `rehype-raw`, ou conversão no build com sanitização).
+- Suporte a: headings, listas, links (externos com `rel="noopener noreferrer"`), imagens com legenda, citações, tabelas, código.
+- Sumário (TOC) automático para posts com 3 ou mais `h2`.
+- Card de autor, `post-cta` (contato), 3 posts relacionados (por tag) e links de compartilhamento (LinkedIn, WhatsApp, copiar link) **sem scripts de terceiros**.
 
-2. Priorizar  
-Selecionamos casos de uso com maior potencial de impacto e viabilidade.
+### RF33: Integração com a home
+A seção "Mídia e publicações" (RF09) consome os posts mais recentes e os itens de `media.ts`.
 
-3. Prototipar  
-Criamos MVPs rápidos para validar valor, experiência e aderência técnica.
+### RF34: Fluxo de publicação (via Claude Code)
+1. Criar `content/blog/<slug>.md` com frontmatter válido.
+2. Adicionar imagens em `public/blog/<slug>/`.
+3. Rodar `npm run build` (valida frontmatter, gera rotas, sitemap e RSS).
+4. Commit e deploy.
 
-4. Implantar  
-Integramos a solução ao fluxo real de trabalho.
-
-5. Medir  
-Acompanhamos indicadores de produtividade, adoção, custo, qualidade e impacto.
-
-6. Otimizar  
-Evoluímos a solução com base em dados, feedback e melhoria contínua.
-
-7. Mitigar  
-Apoiamos a redução de desperdícios e a mensuração da pegada socioambiental da IA.
+Documentar esse fluxo no `README.md` e em `content/blog/_TEMPLATE.md`.
 
 ---
 
-### RF08 - Seção de diferenciais
+## 8. Requisitos não funcionais
 
-Título sugerido:
+### RNF01: Roteamento e renderização (SEO)
+- Adicionar roteamento client-side (ex.: `react-router-dom`).
+- **Todas as rotas devem ser servidas com HTML pré-renderizado no build** (SSG), com `<title>`, meta description, Open Graph e conteúdo indexável no HTML inicial. Uma SPA que só renderiza no cliente **não atende** ao requisito do blog. Sugestão: `vite-react-ssg` ou script de pré-renderização no build. O Claude Code deve escolher a opção mais leve compatível com a stack, justificar e documentar.
+- `server.js` (Express) deve servir os HTMLs pré-renderizados por rota, os assets com cache longo (hash) e responder 404 com a página 404.
 
-**Por que a Sociabilis AI Labs**
+### RNF02: SEO
+- Title e description únicos por página e por post. Canonical. OG e Twitter cards (imagem OG padrão + capa do post).
+- JSON-LD: `Organization` (home), `Service` (cada oferta na página IA no seu negócio), `BlogPosting` + `BreadcrumbList` (posts).
+- `sitemap.xml` gerado no build com todas as rotas e posts. `robots.txt` apontando para o sitemap. RSS em `/blog/rss.xml`.
+- `lang="pt-BR"`. URLs em kebab-case sem acentos.
 
-Diferenciais:
+### RNF03: Performance
+- Lighthouse ≥ 90 em Performance, Accessibility, Best Practices e SEO em todas as páginas (mobile).
+- Fontes self-hosted com subset. Imagens WebP/AVIF com `width`/`height` e `loading="lazy"` abaixo da dobra.
+- Code splitting por rota. Evitar bibliotecas pesadas: animações via CSS + IntersectionObserver.
 
-#### IA aplicada, não apenas conceitual
-Ajudamos a tirar a IA da apresentação e levá-la para a operação.
+### RNF04: Acessibilidade
+Mantém a v1 (HTML semântico, headings corretos, contraste AA, foco visível, teclado, labels, alt), mais: `<dialog>` com foco preso e retorno de foco; `<details>` nativo; `aria-current` no link ativo; `prefers-reduced-motion`.
 
-#### Modelo Forward Deployed AI
-Atuamos próximos ao cliente para entender contexto, cultura, dados e processos reais.
+### RNF05: Segurança
+Mantém a v1. Exceção explícita: nenhum HTML bruto vindo do Markdown. Headers de segurança no Express (CSP compatível com reCAPTCHA, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors`). Validar `interesses[]` contra lista branca no servidor. Rate limit simples em `/api/contact`.
 
-#### Sustentabilidade como premissa
-Consideramos eficiência, custo, consumo e impacto socioambiental desde o desenho da solução.
+### RNF06: Privacidade
+Mantém a v1. Página `/politica-de-privacidade`. Nenhum analytics ou pixel sem decisão explícita (fora do escopo).
 
-#### Governança desde o início
-Projetamos soluções com atenção a segurança, privacidade, rastreabilidade e uso responsável.
-
-#### Arquitetura eficiente
-Priorizamos RAG, SLMs, automações e escolha adequada de modelos para evitar desperdício técnico e financeiro.
-
-#### Foco em negócios responsáveis
-Falamos com empresas que desejam crescer com inovação, sustentabilidade e impacto positivo.
-
----
-
-### RF09 - Seção de público-alvo
-
-Título sugerido:
-
-**Para empresas que querem crescer com IA e responsabilidade.**
-
-Exibir segmentos:
-
-- B Corps;
-- negócios de impacto;
-- empresas responsáveis;
-- PMEs em transformação digital;
-- consultorias ESG;
-- startups;
-- organizações do terceiro setor;
-- áreas de inovação, tecnologia, sustentabilidade e operações.
-
-Texto de apoio:
-
-Se sua organização quer usar IA para aumentar produtividade, reduzir desperdícios, melhorar decisões e acelerar inovação, a Sociabilis AI Labs pode ajudar a construir essa jornada de forma prática, segura e sustentável.
+### RNF07: Manutenibilidade
+- Conteúdo separado de componentes: `src/content/` (offers, logos, media, authors, navigation) e `content/blog/`.
+- Tokens do DESIGN.md em `tailwind.config.js` (substituir os tokens da v1).
+- Componentes reutilizáveis: `Container`, `Section`, `Eyebrow`, `SectionHeader`, `Button`, `LinkArrow`, `Card`, `LetteredCard`, `FeatureItem`, `Steps`, `Expandable`, `LogoStrip`, `DarkBand`, `MediaCard`, `PostCard`, `TagChip`, `Pagination`, `ContactForm`, `ContactModal`, `Seo`.
 
 ---
 
-### RF10 - Seção de CTA final
-
-Título sugerido:
-
-**Sua empresa não precisa apenas testar IA. Ela precisa implantar IA com estratégia, governança e impacto positivo.**
-
-Texto sugerido:
-
-A Sociabilis AI Labs transforma inteligência artificial em resultado real para negócios responsáveis.
-
-CTA:
-
-- **Fale com a Sociabilis**
-- **Conheça nossas soluções**
-
-O CTA pode direcionar para:
-
-- link de e-mail configurável;
-- formulário de contato, caso já exista backend ou serviço de formulário;
-- seção de contato;
-- WhatsApp, se houver número oficial definido no projeto.
-
-Não inventar e-mail, telefone ou WhatsApp. Caso essas informações não existam no projeto, usar placeholders claros em constantes de configuração.
+## 9. Stack técnica
+- Manter: React 18 + TypeScript + Vite + Tailwind CSS 3 + Express (server.js) + Resend.
+- Adicionar somente o necessário (justificar no resumo): roteador; SSG/pré-renderização; parser de frontmatter e Markdown seguro; fontes self-hosted; ícones com tree-shaking.
 
 ---
 
-### RF11 - Footer
+## 10. Assets e informações a fornecer pela Sociabilis
 
-O footer deve conter:
+| Item | Necessário para | Status |
+|---|---|---|
+| Logos de clientes (SVG/PNG) + autorização | RF10 | [ASSET] |
+| Logos de parceiros e certificações + autorização | RF04, RF12 | [ASSET] |
+| Lista de podcasts, artigos e mídia (título, veículo, data, URL) | RF09 | [ASSET] |
+| 2–3 posts iniciais | RF31 | [ASSET] |
+| Autores (nome, cargo, foto, LinkedIn) | RF30 | [ASSET] |
+| E-mail, WhatsApp, LinkedIn, Instagram | RF12, `contact.ts` | [ASSET] |
+| Texto da política de privacidade (ou URL) | RF11, RF12 | [ASSET] |
+| Validação dos textos [VALIDAR] | Home, IA no seu negócio | Pendente |
+| Vídeo institucional (opcional) | RF05 | Opcional |
+| Logo em versão clara (para o footer escuro) | RF12 | [ASSET] (ou gerar versão monocromática) |
 
-- logotipo ou nome Sociabilis AI Labs;
-- breve descrição;
-- links internos;
-- espaço para redes sociais, se existirem;
-- copyright;
-- menção à Sociabilis.
-
-Texto sugerido:
-
-**Sociabilis AI Labs**  
-IA aplicada, governança desde o início e sustentabilidade como diferencial.
-
-Copyright:
-
-`© ${anoAtual} Sociabilis. Todos os direitos reservados.`
+Enquanto um asset não existir: usar placeholder configurável e ocultar a seção quando ela ficaria vazia. Nunca inventar logos, números, depoimentos ou dados de contato.
 
 ---
 
-## 9. Requisitos não funcionais
+## 11. Fases de implementação (sugestão para o Claude Code)
 
-### RNF01 - Responsividade
+1. **Fundação:** tokens do DESIGN.md no Tailwind, fontes, componentes base, roteamento, SSG, `Seo`, 404, servidor.
+2. **Home:** redesign seção por seção (RF01–RF12), conteúdo em `src/content/`.
+3. **IA no seu negócio:** RF20–RF26 a partir de `offers.ts`.
+4. **Blog:** pipeline de Markdown, listagem, tags, paginação, post, RSS, sitemap, template.
+5. **Contato:** modal, interesses, ajustes no `server.js`, rate limit, headers.
+6. **QA:** lint, build, Lighthouse mobile por página, teste de teclado, larguras 360/768/1024/1440.
 
-O website deve ser totalmente responsivo e funcionar corretamente em:
-
-- smartphones pequenos;
-- smartphones grandes;
-- tablets;
-- notebooks;
-- desktops;
-- telas ultrawide.
-
-Breakpoints mínimos recomendados:
-
-- mobile: até 640px;
-- tablet: 641px a 1024px;
-- desktop: acima de 1024px.
-
-Não deve haver rolagem horizontal em nenhuma resolução.
+Cada fase deve terminar com build sem erros e pode virar um commit/PR separado.
 
 ---
 
-### RNF02 - Performance
-
-O site deve ser rápido e leve.
-
-Requisitos:
-
-- otimizar carregamento de imagens;
-- usar lazy loading quando aplicável;
-- evitar bibliotecas pesadas desnecessárias;
-- minimizar JavaScript no cliente;
-- aplicar boas práticas de Core Web Vitals;
-- manter bom desempenho em conexões móveis.
-
-Metas sugeridas:
-
-- Lighthouse Performance maior ou igual a 90;
-- Accessibility maior ou igual a 90;
-- Best Practices maior ou igual a 90;
-- SEO maior ou igual a 90.
+## 12. Critérios de aceite
+1. Todas as rotas da seção 4 funcionam localmente e no build de produção, com HTML pré-renderizado.
+2. Visual segue o `docs/DESIGN.md` v2 (sem laranja/creme da v1). Contraste AA.
+3. Home contém RF01–RF12 na ordem definida. Seções sem asset ficam ocultas, não vazias.
+4. IA no seu negócio exibe as 6 ofertas com âncoras funcionais a partir da home e do footer.
+5. Blog: um post de exemplo publicado, `draft` respeitado, tags, paginação, RSS e sitemap gerados, frontmatter validado no build.
+6. Formulário envia `interesses` e `cargo`, valida no servidor e o modal pré-seleciona interesses.
+7. Nenhum conteúdo, número ou asset copiado da Dharma AI.
+8. Sem secrets no frontend. Sem `dangerouslySetInnerHTML`.
+9. `npm run lint` e `npm run build` sem erros.
+10. Lighthouse mobile ≥ 90 nas quatro categorias em `/`, `/ia-no-seu-negocio`, `/blog` e em um post.
 
 ---
 
-### RNF03 - Acessibilidade
-
-Implementar boas práticas de acessibilidade:
-
-- HTML semântico;
-- hierarquia correta de headings;
-- contraste adequado;
-- texto alternativo em imagens relevantes;
-- foco visível em elementos interativos;
-- navegação por teclado;
-- labels em campos de formulário;
-- aria-label quando necessário;
-- evitar texto essencial apenas em imagens.
-
----
-
-### RNF04 - SEO
-
-Implementar SEO básico:
-
-- title adequado;
-- meta description;
-- Open Graph tags;
-- Twitter card;
-- favicon, se existir no projeto;
-- estrutura semântica;
-- headings bem organizados;
-- URLs limpas;
-- conteúdo indexável.
-
-Title sugerido:
-
-**Sociabilis AI Labs | IA responsável e sustentável para negócios de impacto**
-
-Meta description sugerida:
-
-**A Sociabilis AI Labs implanta copilotos, agentes, automações e soluções com RAG para empresas responsáveis, B Corps e negócios de impacto, com governança e sustentabilidade.**
-
----
-
-### RNF05 - Segurança
-
-Mesmo sendo um site institucional, aplicar boas práticas de segurança:
-
-- não expor chaves, tokens ou segredos no frontend;
-- não hardcodar credenciais;
-- validar entradas de formulário, caso exista formulário;
-- sanitizar dados antes de envio, caso aplicável;
-- usar HTTPS em produção;
-- configurar headers de segurança quando possível;
-- evitar dependências desnecessárias;
-- manter dependências atualizadas;
-- evitar uso de `dangerouslySetInnerHTML` ou equivalente;
-- não coletar dados pessoais sem necessidade;
-- se houver formulário, incluir aviso de privacidade ou link para política de privacidade.
-
-Headers recomendados, se o framework permitir:
-
-- Content-Security-Policy;
-- X-Content-Type-Options;
-- Referrer-Policy;
-- Permissions-Policy;
-- X-Frame-Options ou frame-ancestors via CSP.
-
----
-
-### RNF06 - Privacidade
-
-O site não deve coletar dados sensíveis.
-
-Caso seja implementado formulário de contato:
-
-- coletar apenas dados necessários;
-- campos mínimos sugeridos: nome, e-mail, empresa e mensagem;
-- informar finalidade do contato;
-- não armazenar dados localmente no navegador sem necessidade;
-- não enviar dados para serviços terceiros sem configuração explícita.
-
----
-
-### RNF07 - Manutenibilidade
-
-O código deve ser organizado e fácil de manter.
-
-Requisitos:
-
-- componentes reutilizáveis;
-- separação clara entre conteúdo, componentes e layout;
-- nomes descritivos;
-- evitar duplicação de código;
-- usar constantes para textos repetidos;
-- manter estrutura escalável para futuras páginas;
-- seguir padrões existentes do projeto.
-
----
-
-## 10. Stack técnica
-
-O Claude Code deve primeiro inspecionar o projeto para identificar a stack já existente.
-
-### Regra principal
-Se o projeto já possuir framework configurado, manter a stack existente.
-
-### Caso não exista stack definida
-Criar o projeto usando uma stack moderna e adequada para landing page:
-
-- React com TypeScript;
-- Vite ou Next.js;
-- CSS seguindo o design system em `docs/DESIGN.md`;
-- Tailwind CSS apenas se já estiver no projeto ou se fizer sentido com o design system;
-- componentes sem dependências pesadas desnecessárias.
-
-### Importante
-Não instalar bibliotecas sem necessidade clara. Priorizar simplicidade, performance e manutenibilidade.
-
----
-
-## 11. Diretrizes visuais
-
-O Claude Code deve seguir o arquivo `docs/DESIGN.md`.
-
-Antes de criar componentes, ler e aplicar:
-
-- cores;
-- tipografia;
-- espaçamentos;
-- tokens;
-- bordas;
-- sombras;
-- estilo de botões;
-- grid;
-- cards;
-- ícones;
-- padrões de responsividade;
-- padrões de acessibilidade.
-
-### Logotipo
-Utilizar obrigatoriamente:
-
-`img/logo-big-sociabilis.png`
-
-Requisitos:
-
-- preservar proporção;
-- não distorcer;
-- usar tamanho adequado no header e, se fizer sentido, no footer;
-- definir `alt` adequado, como: `Sociabilis AI Labs`.
-
----
-
-## 12. Tom de voz e copywriting
-
-O tom do site deve ser:
-
-- profissional;
-- claro;
-- moderno;
-- confiável;
-- estratégico;
-- acessível;
-- sem excesso de jargão;
-- orientado a negócio;
-- com autoridade técnica;
-- com preocupação socioambiental.
-
-Evitar:
-
-- promessas exageradas;
-- linguagem genérica de IA;
-- frases como "revolucione tudo com IA";
-- excesso de termos técnicos sem explicação;
-- greenwashing;
-- afirmar neutralização ou compensação sem metodologia definida;
-- prometer redução ambiental sem medição.
-
-Usar linguagem como:
-
-- implantação;
-- governança;
-- eficiência;
-- impacto mensurável;
-- negócios responsáveis;
-- IA aplicada;
-- produtividade responsável;
-- sustentabilidade como premissa.
-
----
-
-## 13. Conteúdo final da landing page
-
-### Hero
-
-**Sociabilis AI Labs**
-
-**Implantamos IA responsável e sustentável no coração da operação do seu negócio.**
-
-Ajudamos empresas responsáveis, B Corps e negócios de impacto a transformarem IA em resultado real por meio de copilotos, agentes, automações e soluções com RAG, sempre com governança, eficiência e atenção aos impactos socioambientais.
-
-Botões:
-
-- Conheça nossas soluções
-- Fale com a Sociabilis
-
----
-
-### Problema
-
-**IA não gera valor quando fica presa em pilotos isolados.**
-
-Muitas organizações já utilizam ferramentas de IA, mas ainda enfrentam dificuldade para transformar experimentos em soluções operacionais. O resultado são iniciativas desconectadas, baixa governança, riscos de segurança, custos pouco visíveis e impactos socioambientais ignorados.
-
-Cards:
-
-- Ferramentas desconectadas
-- Falta de integração aos processos
-- Riscos de dados e privacidade
-- Baixa governança
-- Custos e impactos invisíveis
-- Dificuldade de escalar pilotos
-
----
-
-### Proposta de valor
-
-**Da estratégia à implantação: IA aplicada com governança e impacto positivo.**
-
-A Sociabilis AI Labs atua como uma AI Deployment Company. Entramos no contexto real do cliente, entendemos seus processos, priorizamos casos de uso de alto impacto e implantamos soluções de IA que podem ser medidas, governadas e evoluídas.
-
-Blocos:
-
-- Implantar IA na operação
-- Governar riscos e uso responsável
-- Reduzir desperdícios e impactos
-- Medir resultados e evolução
-
----
-
-### Pilares
-
-**Três pilares para uma IA que gera resultado real.**
-
-**Deploy AI**  
-Implantamos soluções de IA conectadas aos processos reais da empresa, como copilotos internos, agentes, automações e sistemas com RAG.
-
-**Govern AI**  
-Criamos bases de governança, segurança, privacidade, rastreabilidade e uso responsável para que a IA possa ser adotada com confiança.
-
-**Sustain AI**  
-Aplicamos princípios de eficiência, escolha adequada de modelos, redução de desperdícios e mensuração da pegada socioambiental da IA.
-
----
-
-### Ofertas
-
-**Ofertas para acelerar sua jornada de IA responsável.**
-
-**AI Opportunity & Impact Scan**  
-Diagnóstico para identificar onde a IA pode gerar mais valor no negócio.
-
-**RAG Starter**  
-Implantação de copilotos com base de conhecimento própria da empresa.
-
-**Forward Deployed AI Pod**  
-Squad da Sociabilis AI Labs atuando próximo ao cliente para implantar IA no contexto real do negócio.
-
-**AI Agents & Automation**  
-Criação de agentes de IA e automações inteligentes para apoiar ou executar tarefas operacionais.
-
-**Sustainable AI Assessment**  
-Avaliação da maturidade, governança e impacto socioambiental do uso de IA na organização.
-
-**AI Carbon Tracker**  
-Produto da Sociabilis para estimar, acompanhar e comunicar a pegada climática associada ao uso de IA generativa.
-
----
-
-### Metodologia
-
-**Como trabalhamos**
-
-1. **Diagnosticar**  
-Entendemos o negócio, os processos, os dados e as principais dores.
-
-2. **Priorizar**  
-Selecionamos casos de uso com maior potencial de impacto e viabilidade.
-
-3. **Prototipar**  
-Criamos MVPs rápidos para validar valor, experiência e aderência técnica.
-
-4. **Implantar**  
-Integramos a solução ao fluxo real de trabalho.
-
-5. **Medir**  
-Acompanhamos indicadores de produtividade, adoção, custo, qualidade e impacto.
-
-6. **Otimizar**  
-Evoluímos a solução com base em dados, feedback e melhoria contínua.
-
-7. **Mitigar**  
-Apoiamos a redução de desperdícios e a mensuração da pegada socioambiental da IA.
-
----
-
-### Diferenciais
-
-**Por que a Sociabilis AI Labs**
-
-**IA aplicada, não apenas conceitual**  
-Ajudamos a tirar a IA da apresentação e levá-la para a operação.
-
-**Modelo Forward Deployed AI**  
-Atuamos próximos ao cliente para entender contexto, cultura, dados e processos reais.
-
-**Sustentabilidade como premissa**  
-Consideramos eficiência, custo, consumo e impacto socioambiental desde o desenho da solução.
-
-**Governança desde o início**  
-Projetamos soluções com atenção a segurança, privacidade, rastreabilidade e uso responsável.
-
-**Arquitetura eficiente**  
-Priorizamos RAG, SLMs, automações e escolha adequada de modelos para evitar desperdício técnico e financeiro.
-
-**Foco em negócios responsáveis**  
-Falamos com empresas que desejam crescer com inovação, sustentabilidade e impacto positivo.
-
----
-
-### Público-alvo
-
-**Para empresas que querem crescer com IA e responsabilidade.**
-
-Atendemos B Corps, negócios de impacto, empresas responsáveis, PMEs em transformação digital, consultorias ESG, startups, organizações do terceiro setor e áreas de inovação, tecnologia, sustentabilidade e operações.
-
-Se sua organização quer usar IA para aumentar produtividade, reduzir desperdícios, melhorar decisões e acelerar inovação, a Sociabilis AI Labs pode ajudar a construir essa jornada de forma prática, segura e sustentável.
-
----
-
-### CTA final
-
-**Sua empresa não precisa apenas testar IA. Ela precisa implantar IA com estratégia, governança e impacto positivo.**
-
-A Sociabilis AI Labs transforma inteligência artificial em resultado real para negócios responsáveis.
-
-Botões:
-
-- Fale com a Sociabilis
-- Conheça nossas soluções
-
----
-
-### Footer
-
-**Sociabilis AI Labs**  
-IA aplicada, governança desde o início e sustentabilidade como diferencial.
-
-`© ${anoAtual} Sociabilis. Todos os direitos reservados.`
-
----
-
-## 14. Componentes sugeridos
-
-Criar componentes reutilizáveis, conforme a stack do projeto:
-
-- `Header`
-- `HeroSection`
-- `ProblemSection`
-- `ValuePropositionSection`
-- `PillarsSection`
-- `OffersSection`
-- `MethodologySection`
-- `DifferentialsSection`
-- `AudienceSection`
-- `FinalCTASection`
-- `Footer`
-- `SectionHeader`
-- `Card`
-- `CTAButton`
-- `Container`
-
-Caso o projeto use outra convenção de nomes, seguir o padrão existente.
-
----
-
-## 15. Critérios de aceite
-
-O desenvolvimento será considerado concluído quando:
-
-1. O website estiver funcional localmente.
-2. O logotipo `img/logo-big-sociabilis.png` estiver aplicado corretamente.
-3. As diretrizes de `docs/DESIGN.md` tiverem sido respeitadas.
-4. Todas as seções obrigatórias estiverem presentes.
-5. A página estiver responsiva em mobile, tablet e desktop.
-6. Não houver rolagem horizontal.
-7. A navegação por âncoras estiver funcionando.
-8. Os CTAs estiverem visíveis e funcionais.
-9. O site tiver title e meta description.
-10. As imagens tiverem textos alternativos.
-11. O HTML estiver semântico.
-12. O código estiver organizado em componentes reutilizáveis.
-13. Não houver secrets ou credenciais expostas.
-14. O site passar em build sem erros.
-15. O Lighthouse deve atingir pontuação mínima sugerida de 90 em Performance, Accessibility, Best Practices e SEO, sempre que possível.
-
----
-
-## 16. Instruções específicas para o Claude Code
-
-Antes de implementar:
-
-1. Inspecione a estrutura do projeto.
-2. Leia `docs/DESIGN.md`.
-3. Verifique onde estão os arquivos de imagem.
-4. Confirme a stack pelo `package.json` ou arquivos equivalentes.
-5. Preserve padrões existentes do projeto.
-6. Não remova arquivos não relacionados.
-7. Não altere o design system sem necessidade.
-8. Não crie backend sem solicitação explícita.
-9. Não invente dados de contato.
-10. Use placeholders configuráveis caso informações como e-mail, telefone ou WhatsApp não estejam disponíveis.
-
-Durante a implementação:
-
-1. Criar a landing page da Sociabilis AI Labs.
-2. Separar a página em componentes.
-3. Aplicar responsividade mobile-first.
-4. Usar HTML semântico.
-5. Aplicar boas práticas de acessibilidade.
-6. Otimizar imagens.
-7. Evitar dependências pesadas.
-8. Garantir build sem erros.
-9. Testar visualmente em diferentes larguras de tela.
-10. Documentar no README, se necessário, como rodar o projeto.
-
-Após implementar:
-
-1. Rodar lint, se existir.
-2. Rodar build, se existir.
-3. Corrigir erros encontrados.
-4. Informar arquivos alterados.
-5. Informar comandos utilizados.
-6. Informar pontos pendentes, caso existam.
-
----
-
-## 17. Fora de escopo do MVP
-
-Não implementar neste primeiro momento:
-
-- área administrativa;
-- blog;
-- CMS;
-- autenticação;
-- dashboard;
-- backend próprio;
-- banco de dados;
-- checkout;
-- integração real com CRM;
-- cálculo real de pegada de carbono;
-- formulário funcional com envio real, salvo se já existir serviço configurado no projeto.
-
----
-
-## 18. Evoluções futuras
-
-O projeto deve ser estruturado de forma que permita evoluções futuras, como:
-
-- página específica do AI Carbon Tracker;
-- página específica do CNPJ Neutro;
-- blog sobre IA sustentável;
-- biblioteca de cases;
-- formulário integrado a CRM;
-- página de diagnóstico gratuito;
-- calculadora simples de maturidade em IA;
-- calculadora de pegada de IA;
-- versão multilíngue;
-- dashboard de leads;
-- integração com analytics;
-- área de materiais ricos.
+## 13. Fora de escopo da v2
+CMS ou painel administrativo · autenticação · comentários no blog · busca no site · newsletter · versão em inglês · analytics/pixels · integração com CRM · cálculo real de pegada de carbono · página própria do AI Carbon Tracker.
+
+## 14. Evoluções futuras
+Versão bilíngue PT/EN (a referência é bilíngue) · busca no blog · newsletter · página do AI Carbon Tracker · página do CNPJ Neutro · biblioteca de cases (com números reais) · diagnóstico gratuito/calculadora de maturidade · integração com CRM · analytics com consentimento · CMS headless, se a equipe editorial crescer.

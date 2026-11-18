@@ -35,6 +35,7 @@ A identidade vem do logotipo: **verde Sociabilis** (`#339966`), **verde-lima** (
 |---|---|---|
 | `{colors.canvas}` | `#ffffff` | Fundo padrão das páginas. |
 | `{colors.canvas-soft}` | `#f4f7f5` | Cards, faixas alternadas, blocos de destaque. |
+| `{colors.hero}` | `#e4ede7` | Painel do hero da home: verde-sálvia claro derivado do verde Sociabilis. Texto `{colors.ink}` (15.5:1) e `{colors.body}` (7.1:1). Texto verde pequeno sobre ele em `{colors.primary-hover}` (5.4:1), porque `{colors.primary}` fica em 4.4:1. |
 | `{colors.line}` | `#e3e8e5` | Hairlines, bordas de cards e inputs em repouso. |
 | `{colors.night}` | `#0f1a14` | Faixas escuras (manifesto, CTA intermediário), footer, modal de contato (cabeçalho). |
 | `{colors.night-soft}` | `#18261e` | Cards sobre `{colors.night}`. |
@@ -54,7 +55,8 @@ A identidade vem do logotipo: **verde Sociabilis** (`#339966`), **verde-lima** (
 ## Typography
 
 ### Famílias
-1. **Inter Tight** (600): títulos de display. Compacta e técnica, conversa com o lettering condensado do logo.
+1. **Inter Tight** (600): títulos de seção (`display-lg`, `display-md`, `heading-sm`). Compacta e técnica, conversa com o lettering condensado do logo.
+   O título de página (`display-xl`) usa **Inter 400**, mais leve, para uma primeira dobra suave.
 2. **Inter** (400/500/600): corpo, navegação, botões, formulários.
 3. **JetBrains Mono** (500), opcional: rótulos de sequência (`01`, `A`) e eyebrows técnicos.
 
@@ -64,7 +66,7 @@ Fontes **self-hosted** (ex.: `@fontsource/inter`, `@fontsource/inter-tight`) com
 
 | Token | Desktop | Mobile | Peso | Line height | Tracking | Uso |
 |---|---|---|---|---|---|---|
-| `{typography.display-xl}` | 64px | 40px | 600 | 1.05 | -0.02em | Hero (Inter Tight). |
+| `{typography.display-xl}` | 56px | 32px | 400 | 1.12 | -0.025em | Título de página (h1) e hero (Inter, peso regular). |
 | `{typography.display-lg}` | 48px | 32px | 600 | 1.1 | -0.02em | Títulos de seção e manifesto. |
 | `{typography.display-md}` | 32px | 26px | 600 | 1.2 | -0.01em | Subtítulos de seção, títulos de oferta. |
 | `{typography.heading-sm}` | 22px | 20px | 600 | 1.3 | -0.01em | Títulos de card. |
@@ -123,6 +125,7 @@ Sem sombras em cards. Profundidade vem de contraste de superfície e hairlines.
 | `{rounded.md}` | 10px | Botões, cards. |
 | `{rounded.lg}` | 16px | Cards grandes de oferta, modal, capas de post. |
 | `{rounded.pill}` | 9999px | Badges, chips de filtro do blog, chips de índice. |
+| `{rounded.hero}` | 32px (mobile) · 48px (desktop) | Cantos inferiores do painel do hero da home. |
 
 ## Iconography & imagery
 - Ícones em traço fino de 1.5px, 24px ou 32px, cor `{colors.ink}` (ou `{colors.brand}` em destaque). Biblioteca leve com tree-shaking (ex.: `lucide-react`) ou SVGs próprios. Um estilo só.
@@ -151,7 +154,7 @@ Sem sombras em cards. Profundidade vem de contraste de superfície e hairlines.
 - **`language-switcher`**: "PT | EN" em `{typography.body-sm}` 500. O idioma atual fica em `{colors.ink}` com sublinhado de 2px `{colors.brand}` e `aria-current`; o outro, em `{colors.body-mid}`, é link com `hreflang` e `lang`. Fica antes do CTA no header desktop e acima do CTA no menu mobile. Alvos de 44px.
 
 ### Signature sections (inspiradas na estrutura da Dharma)
-- **`hero`**: eyebrow + `display-xl` + lead `body-lg` + 2 CTAs. Ilustração abstrata à direita no desktop. Fundo branco.
+- **`hero`**: painel `{colors.hero}` de largura total, logo abaixo do header, com cantos inferiores `{rounded.hero}`. Eyebrow + `display-xl` (regular, leve) + lead (`body-md` no mobile, `body-lg` no desktop) + 2 CTAs. Ilustração low-poly à direita no desktop; no mobile, discreta no rodapé do painel (opacidade reduzida, sem sobrepor o texto). Sem sombra.
 - **`value-icons`**: 4 colunas com ícone, título curto (`heading-sm`) e uma linha de apoio. Hairline acima e abaixo. **Sem números inventados.**
 - **`logo-strip`**: rótulo eyebrow à esquerda ("Parceiros e certificações" / "Clientes") e logos em linha.
 - **`manifesto-band`**: fundo `{colors.night}`, eyebrow em `{colors.accent}`, título `display-lg` branco, frases curtas em linhas separadas, palavra-chave destacada em `{colors.accent}`.
@@ -185,6 +188,7 @@ Sem sombras em cards. Profundidade vem de contraste de superfície e hairlines.
 
 ## Changelog
 
+- **v2.2 (nov/2026):** primeira dobra mais suave. O hero da home vira um painel `{colors.hero}` com cantos inferiores arredondados (`{rounded.hero}`), e `display-xl` passa a 32/56px em Inter 400 (antes 40/64px, Inter Tight 600). Referência de estrutura: hero da Dharma AI no mobile (sem copiar cores, textos ou imagens).
 - **v2.1 (nov/2026, QA):** rótulos de sequência (A/B/C, 01/02), eyebrows e outros textos verdes pequenos sobre fundo claro passam de `{colors.brand}` para `{colors.primary}`, para atingir contraste AA. `{colors.brand}` segue para ícones, setas e detalhes gráficos.
 
 ## Do's and Don'ts

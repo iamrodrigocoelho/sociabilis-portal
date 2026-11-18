@@ -8,7 +8,7 @@ import plugin from 'tailwindcss/plugin'
 // Tipografia: [mobile, desktop, peso, line-height, tracking, família]
 // Desktop a partir do breakpoint `lg` (1024px).
 const TYPE_SCALE = {
-  'display-xl': ['2.5rem', '4rem', 600, '1.05', '-0.02em', 'display'],
+  'display-xl': ['2rem', '3.5rem', 400, '1.12', '-0.025em', 'sans'],
   'display-lg': ['2rem', '3rem', 600, '1.1', '-0.02em', 'display'],
   'display-md': ['1.625rem', '2rem', 600, '1.2', '-0.01em', 'display'],
   'heading-sm': ['1.25rem', '1.375rem', 600, '1.3', '-0.01em', 'display'],
@@ -24,7 +24,7 @@ const TYPE_SCALE = {
 
 const FONT_FAMILY = {
   display: ['"Inter Tight"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-  sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+  sans: ['Inter', '"Inter Fallback"', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
 }
 
 /** @type {import('tailwindcss').Config} */
@@ -46,6 +46,7 @@ export default {
           soft: '#f4f7f5',
         },
         line: '#e3e8e5',
+        hero: '#e4ede7',
         night: {
           DEFAULT: '#0f1a14',
           soft: '#18261e',
@@ -82,6 +83,8 @@ export default {
         md: '10px',
         lg: '16px',
         pill: '9999px',
+        hero: '32px',
+        'hero-lg': '48px',
       },
       boxShadow: {
         overlay: '0 24px 48px -12px rgba(15, 26, 20, 0.25)',

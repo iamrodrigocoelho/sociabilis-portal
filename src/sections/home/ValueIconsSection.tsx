@@ -10,7 +10,7 @@ export function ValueIconsSection() {
   const VALUE_ICONS = HOME[locale].valueIcons
   const VALUE_ICONS_TITLE = UI[locale].valueIconsTitle
   return (
-    <section aria-labelledby="value-icons-title" className="border-y border-line">
+    <section aria-labelledby="value-icons-title" className="border-b border-line">
       <Container>
         {/* Título só para leitores de tela: mantém a hierarquia h1 → h2 → h3. */}
         <h2 id="value-icons-title" className="sr-only">

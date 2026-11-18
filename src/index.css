@@ -4,6 +4,20 @@
 @import '@fontsource/inter/latin-600.css';
 @import '@fontsource/inter-tight/latin-600.css';
 
+/*
+ * Fonte de reserva com as métricas da Inter (Arial ajustada): enquanto a Inter
+ * carrega, o texto ocupa o mesmo espaço, evitando deslocamento de layout (CLS)
+ * na troca de fonte.
+ */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.12%;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

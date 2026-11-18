@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { blogPlugin } from './scripts/vite-plugin-blog'
+import { blogPlugin } from './scripts/vite-plugin-blog.ts'
 
 export default defineConfig({
   plugins: [react(), blogPlugin()],

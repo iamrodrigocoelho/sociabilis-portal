@@ -92,7 +92,18 @@ function rateLimit(req, res, next) {
  * ContactForm) e ter pontuação mínima (0 = provável robô, 1 = provável pessoa).
  */
 const RECAPTCHA_ACTION = 'contact'
-const RECAPTCHA_MIN_SCORE = Number(process.env.RECAPTCHA_MIN_SCORE ?? 0.5)
+const DEFAULT_MIN_SCORE = 0.5
+
+/** Valor vazio, não numérico ou fora de 0–1 cai no padrão (vazio viraria 0 e aceitaria tudo). */
+function parseMinScore(raw) {
+  if (raw === undefined || raw.trim() === '') return DEFAULT_MIN_SCORE
+  const value = Number(raw)
+  if (Number.isFinite(value) && value >= 0 && value <= 1) return value
+  console.warn(`RECAPTCHA_MIN_SCORE inválido ("${raw}"); usando ${DEFAULT_MIN_SCORE}.`)
+  return DEFAULT_MIN_SCORE
+}
+
+const RECAPTCHA_MIN_SCORE = parseMinScore(process.env.RECAPTCHA_MIN_SCORE)
 
 async function verifyCaptcha(token) {
   const secret = process.env.RECAPTCHA_SECRET_KEY

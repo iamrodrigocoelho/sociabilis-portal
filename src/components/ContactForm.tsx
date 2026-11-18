@@ -11,9 +11,7 @@ declare global {
   interface Window {
     grecaptcha?: {
       ready: (cb: () => void) => void
-      render: (el: HTMLElement, opts: { sitekey: string; theme?: string }) => number
-      getResponse: (id?: number) => string
-      reset: (id?: number) => void
+      execute: (siteKey: string, opts: { action: string }) => Promise<string>
     }
   }
 }
@@ -25,7 +23,38 @@ type FieldName = TextField | 'interesses'
 const EMPTY: Record<TextField, string> = { nome: '', email: '', empresa: '', cargo: '', mensagem: '' }
 const REQUIRED: TextField[] = ['nome', 'email', 'empresa']
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const SCRIPT_ID = 'recaptcha-v2-script'
+const SCRIPT_ID = 'recaptcha-v3-script'
+/** Ação enviada ao reCAPTCHA v3 e conferida no server.js. */
+const RECAPTCHA_ACTION = 'contact'
+
+/** Carrega o script do reCAPTCHA v3 uma única vez e resolve quando estiver pronto. */
+let recaptchaReady: Promise<void> | null = null
+function loadRecaptcha(siteKey: string, lang: string): Promise<void> {
+  recaptchaReady ??= new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script')
+    script.id = SCRIPT_ID
+    // O idioma vale para a página inteira (o script é carregado uma vez).
+    script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}&hl=${lang}`
+    script.async = true
+    script.addEventListener('load', () => window.grecaptcha?.ready(() => resolve()), { once: true })
+    script.addEventListener(
+      'error',
+      () => {
+        recaptchaReady = null // permite tentar de novo
+        reject(new Error('recaptcha'))
+      },
+      { once: true },
+    )
+    document.head.appendChild(script)
+  })
+  return recaptchaReady
+}
+
+/** Gera um token v3 para a ação "contact" (válido por 2 minutos: gerado no envio). */
+async function getRecaptchaToken(siteKey: string, lang: string): Promise<string> {
+  await loadRecaptcha(siteKey, lang)
+  return window.grecaptcha!.execute(siteKey, { action: RECAPTCHA_ACTION })
+}
 
 /** Limites espelhados no server.js. */
 export const CONTACT_LIMITS = { nome: 120, email: 200, empresa: 160, cargo: 120, mensagem: 5000 } as const
@@ -43,8 +72,9 @@ interface ContactFormProps {
 }
 
 /**
- * Formulário de contato (Resend + reCAPTCHA v2). O script do reCAPTCHA só é
- * carregado quando o formulário se aproxima da área visível ou recebe foco.
+ * Formulário de contato (Resend + reCAPTCHA v3, invisível). O script do
+ * reCAPTCHA só é carregado quando o formulário se aproxima da área visível ou
+ * recebe foco; o token é gerado no envio e validado no server.js (pontuação e ação).
  */
 export function ContactForm({ initialInterests = [], variant = 'section', successAction }: ContactFormProps) {
   const locale = useLocale()
@@ -58,20 +88,16 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
   const [errorMsg, setErrorMsg] = useState('')
   const [invalid, setInvalid] = useState<Set<FieldName>>(new Set())
   const formRef = useRef<HTMLFormElement>(null)
-  const captchaRef = useRef<HTMLDivElement>(null)
-  const widgetIdRef = useRef<number | null>(null)
 
+  // Pré-carrega o reCAPTCHA v3 quando o formulário se aproxima da área visível
+  // ou recebe foco, para o envio não esperar o download do script.
   useEffect(() => {
     const formEl = formRef.current
     if (!RECAPTCHA_SITE_KEY || !formEl) return
-
-    const renderWidget = () => {
-      window.grecaptcha?.ready(() => {
-        if (!captchaRef.current || widgetIdRef.current !== null) return
-        widgetIdRef.current = window.grecaptcha!.render(captchaRef.current, { sitekey: RECAPTCHA_SITE_KEY! })
-      })
+    const load = () => {
+      cleanup()
+      loadRecaptcha(RECAPTCHA_SITE_KEY!, recaptchaLang).catch(() => {})
     }
-
     const observer = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && load(), {
       rootMargin: '400px 0px',
     })
@@ -79,24 +105,6 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
       observer.disconnect()
       formEl!.removeEventListener('focusin', load)
     }
-    function load() {
-      cleanup()
-      const existing = document.getElementById(SCRIPT_ID)
-      if (existing) {
-        if (window.grecaptcha) renderWidget()
-        else existing.addEventListener('load', renderWidget, { once: true })
-        return
-      }
-      const script = document.createElement('script')
-      script.id = SCRIPT_ID
-      // O idioma do widget vale para a página inteira (o script é carregado uma vez).
-      script.src = `https://www.google.com/recaptcha/api.js?render=explicit&hl=${recaptchaLang}`
-      script.async = true
-      script.defer = true
-      script.addEventListener('load', renderWidget, { once: true })
-      document.head.appendChild(script)
-    }
-
     observer.observe(formEl)
     formEl.addEventListener('focusin', load)
     return cleanup
@@ -127,10 +135,6 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
     clearInvalid('interesses')
   }
 
-  const resetCaptcha = () => {
-    if (widgetIdRef.current !== null) window.grecaptcha?.reset(widgetIdRef.current)
-  }
-
   function fail(message: string, fields: FieldName[] = []) {
     setErrorMsg(message)
     setStatus('error')
@@ -152,12 +156,17 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
     }
     if (!EMAIL_RE.test(form.email.trim())) return fail(COPY.errors.email, ['email'])
 
-    const captchaToken =
-      RECAPTCHA_SITE_KEY && widgetIdRef.current !== null ? window.grecaptcha?.getResponse(widgetIdRef.current) : ''
-    if (RECAPTCHA_SITE_KEY && !captchaToken) return fail(COPY.errors.captcha)
-
     setStatus('submitting')
     setInvalid(new Set())
+
+    let captchaToken = ''
+    if (RECAPTCHA_SITE_KEY) {
+      try {
+        captchaToken = await getRecaptchaToken(RECAPTCHA_SITE_KEY, recaptchaLang)
+      } catch {
+        return fail(COPY.errors.captcha)
+      }
+    }
 
     try {
       const res = await fetch('/api/contact', {
@@ -180,10 +189,8 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
       // O servidor devolve um código; a mensagem é exibida no idioma da página (RF44).
       const data = (await res.json().catch(() => ({}))) as { error?: ContactErrorCode }
       fail((data.error && COPY.errors[data.error]) || COPY.errors.generic)
-      resetCaptcha()
     } catch {
       fail(COPY.errors.network)
-      resetCaptcha()
     }
   }
 
@@ -291,12 +298,6 @@ export function ContactForm({ initialInterests = [], variant = 'section', succes
         </div>
       </div>
 
-      {RECAPTCHA_SITE_KEY && (
-        // O widget do reCAPTCHA tem largura fixa (304px): reduzido em telas estreitas.
-        <div className="mt-xl h-[66px] sm:h-[78px]">
-          <div ref={captchaRef} className="origin-top-left scale-[0.85] sm:scale-100" />
-        </div>
-      )}
 
       <p className="mt-xl text-caption text-body-mid">
         {COPY.privacy.before}

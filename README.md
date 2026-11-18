@@ -1,10 +1,21 @@
 # Sociabilis AI Labs: website
 
-Site institucional multipágina da Sociabilis AI Labs. Requisitos em `docs/PRD.md`, design system em `docs/DESIGN.md`.
+Site institucional multipágina e bilíngue (PT/EN) da Sociabilis AI Labs. Requisitos em `docs/PRD.md` (inglês: seção 15), design system em `docs/DESIGN.md`.
+
+## Idiomas
+
+- Português na raiz (`/`, `/ia-no-seu-negocio`, `/blog`...) e inglês sob `/en` (`/en`, `/en/ai-for-your-business`, `/en/blog`...). Os caminhos ficam em `src/i18n/locales.ts`.
+- O idioma da página vem da URL (`Layout` → `useLocale()`). Os conteúdos de `src/content/` são objetos `{ pt, en }`, e o TypeScript exige que o inglês tenha a mesma estrutura do português.
+- O seletor PT | EN (`LanguageSwitcher`) leva à página equivalente (`src/lib/i18nPaths.ts`). O `hreflang` só é gerado entre páginas realmente equivalentes.
+- Para mudar um texto, edite os dois idiomas no mesmo arquivo de `src/content/`.
 
 ## Stack
 
-React 18 + TypeScript + Vite 5 + Tailwind CSS 3, `react-router` 7 (roteamento), Express (`server.js`) e Resend (formulário de contato).
+React 18 + TypeScript + Vite 8 + Tailwind CSS 3, `react-router` 7 (roteamento), Express (`server.js`) e Resend (formulário de contato).
+
+## Requisitos
+
+Node.js ^20.19 ou ≥ 22.12, exigido pelo Vite 8 e declarado em `engines` no `package.json`.
 
 ## Comandos
 
@@ -65,9 +76,10 @@ Posts em Markdown, um arquivo por post, em `content/blog/`. Não há CMS nem ban
 
 ### Publicar um post
 
-1. Copie `content/blog/_TEMPLATE.md` para `content/blog/<slug>.md`. O nome do arquivo deve ser igual ao `slug`.
+1. Copie `content/blog/_TEMPLATE.md` para `content/blog/pt/<slug>.md` ou `content/blog/en/<slug>.md`. O idioma vem da pasta, e o nome do arquivo deve ser igual ao `slug`.
 2. Preencha o frontmatter: `title`, `slug`, `description` (120–160 caracteres), `date` (AAAA-MM-DD), `author`, `tags` (1–4) e, se quiser, `updated`, `cover` + `coverAlt` e `draft`.
    - `author` é a chave (ou o nome exato) de um autor em `src/content/authors.ts`.
+   - Se o post tiver versão no outro idioma, preencha `translation` nos dois arquivos, cada um com o slug do outro. O build confere se a ligação é recíproca e mostra o link "Read in English"/"Ler em português" no post.
 3. Coloque as imagens em `public/blog/<slug>/` (WebP/AVIF, largura máx. 1600px) e referencie como `/blog/<slug>/arquivo.webp`.
 4. Rode `npm run build`. O build **falha** com uma mensagem clara se o frontmatter estiver incompleto, o autor não existir, uma imagem não for encontrada, faltar texto alternativo ou houver HTML bruto ou link inseguro no texto.
 5. Faça commit e deploy.
@@ -81,4 +93,4 @@ Não publique afirmações numéricas sem fonte citada no texto.
 
 `scripts/vite-plugin-blog.ts` lê os arquivos no build, valida o frontmatter e converte o Markdown (GFM) numa árvore própria, sem HTML. Ela é renderizada por `src/components/blog/Markdown.tsx` com componentes React (sem `dangerouslySetInnerHTML`). Cada corpo de post vira um chunk separado; a listagem usa só os metadados.
 
-O build gera `/blog`, `/blog/pagina/<n>` (9 posts por página), `/blog/tag/<tag>`, `/blog/<slug>`, `sitemap.xml` (com `lastmod` dos posts) e `/blog/rss.xml`. Os posts mais recentes aparecem também na seção "Mídia e publicações" da home.
+O build gera, em cada idioma, a listagem (`/blog`, `/en/blog`), a paginação (`/blog/pagina/<n>`, `/en/blog/page/<n>`, 9 posts por página), as tags, os posts, o RSS (`/blog/rss.xml`, `/en/blog/rss.xml`) e o `sitemap.xml` (com `lastmod` dos posts). Cada idioma lista só os próprios posts, que também aparecem na seção "Mídia e publicações" da home do idioma.

@@ -147,7 +147,8 @@ Sem sombras em cards. Profundidade vem de contraste de superfície e hairlines.
 - **`header`**: sticky, fundo branco com `backdrop-blur` e hairline inferior ao rolar. Logo à esquerda (altura 32–36px). Links ao centro/direita. CTA `button-primary` "Fale conosco" à direita.
 - **`nav-link`**: `{typography.body-sm}` 500, `{colors.ink}`. Ativo com sublinhado de 2px `{colors.brand}`.
 - **`mobile-menu`**: painel em tela cheia, links grandes (`display-md`), CTA ao final. Fecha com Esc e devolve o foco ao botão.
-- **`skip-link`**: "Pular para o conteúdo", visível no foco.
+- **`skip-link`**: "Pular para o conteúdo" ("Skip to content" em inglês), visível no foco.
+- **`language-switcher`**: "PT | EN" em `{typography.body-sm}` 500. O idioma atual fica em `{colors.ink}` com sublinhado de 2px `{colors.brand}` e `aria-current`; o outro, em `{colors.body-mid}`, é link com `hreflang` e `lang`. Fica antes do CTA no header desktop e acima do CTA no menu mobile. Alvos de 44px.
 
 ### Signature sections (inspiradas na estrutura da Dharma)
 - **`hero`**: eyebrow + `display-xl` + lead `body-lg` + 2 CTAs. Ilustração abstrata à direita no desktop. Fundo branco.

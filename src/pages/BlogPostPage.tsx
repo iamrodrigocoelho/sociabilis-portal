@@ -1,4 +1,4 @@
-import { useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 import { AuthorCard } from '../components/blog/AuthorCard'
 import { Markdown } from '../components/blog/Markdown'
 import { PostCard } from '../components/blog/PostCard'
@@ -10,8 +10,11 @@ import { Container } from '../components/Container'
 import { NotFoundContent } from '../components/NotFoundContent'
 import { Seo } from '../components/Seo'
 import { TagChip } from '../components/TagChip'
-import { BLOG_LABELS as L } from '../content/blog'
-import { BLOG_PATH, getAuthor, getPost, postPath, relatedPosts, tagPath } from '../lib/blog'
+import { BLOG } from '../content/blog'
+import { UI } from '../content/ui'
+import { useLocale } from '../i18n/context'
+import { LOCALE_META, PATHS, otherLocale } from '../i18n/locales'
+import { blogPath, getAuthor, getPost, postPath, relatedPosts, tagPath, translationPath } from '../lib/blog'
 import { readPostBody } from '../lib/blogBodies'
 import { formatDate } from '../lib/format'
 import { blogPostingSchema, breadcrumbSchema } from '../lib/schema'
@@ -19,16 +22,20 @@ import { canonicalUrl } from '../lib/seo'
 
 /** /blog/:slug (RF32). */
 export default function BlogPostPage() {
+  const locale = useLocale()
+  const L = BLOG[locale].labels
   const { slug = '' } = useParams()
-  const post = getPost(slug)
-  const body = post ? readPostBody(slug) : undefined
+  const post = getPost(locale, slug)
+  const body = post ? readPostBody(locale, slug) : undefined
   if (!post || !body) return <NotFoundContent />
 
   const author = getAuthor(post.author)
-  const path = postPath(post.slug)
+  const path = postPath(locale, post.slug)
+  const translated = translationPath(post)
+  const other = otherLocale(locale)
   const url = canonicalUrl(path)
   const related = relatedPosts(post)
-  const crumbs = [{ label: 'Início', to: '/' }, { label: 'Blog', to: BLOG_PATH }, { label: post.title }]
+  const crumbs = [{ label: UI[locale].home, to: PATHS.home[locale] as string }, { label: 'Blog', to: blogPath(locale) }, { label: post.title }]
 
   return (
     <>
@@ -42,7 +49,7 @@ export default function BlogPostPage() {
         publishedTime={post.date}
         modifiedTime={post.updated ?? post.date}
         noindex={post.draft}
-        jsonLd={[blogPostingSchema(post, author), breadcrumbSchema(crumbs, path)]}
+        jsonLd={[blogPostingSchema(post, author, locale), breadcrumbSchema(crumbs, path)]}
       />
 
       <article aria-labelledby="post-title">
@@ -50,10 +57,10 @@ export default function BlogPostPage() {
           <Breadcrumb items={crumbs} />
 
           <header className="mt-2xl max-w-prose">
-            <ul className="flex flex-wrap gap-sm" aria-label="Temas">
+            <ul className="flex flex-wrap gap-sm" aria-label={UI[locale].postTopics}>
               {post.tags.map((tag) => (
                 <li key={tag.slug}>
-                  <TagChip to={tagPath(tag.slug)}>{tag.label}</TagChip>
+                  <TagChip to={tagPath(locale, tag.slug)}>{tag.label}</TagChip>
                 </li>
               ))}
             </ul>
@@ -67,16 +74,28 @@ export default function BlogPostPage() {
                 </span>
               )}
               <span aria-hidden="true">·</span>
-              <time dateTime={post.date}>{formatDate(post.date)}</time>
+              <time dateTime={post.date}>{formatDate(post.date, locale)}</time>
               {post.updated && post.updated !== post.date && (
                 <span>
-                  ({L.updated} <time dateTime={post.updated}>{formatDate(post.updated)}</time>)
+                  ({L.updated} <time dateTime={post.updated}>{formatDate(post.updated, locale)}</time>)
                 </span>
               )}
               <span aria-hidden="true">·</span>
               <span>{L.readingTime(post.readingMinutes)}</span>
               {post.draft && <span className="font-semibold text-error">{L.draft}</span>}
             </p>
+            {translated && (
+              <p className="mt-md text-body-sm">
+                <Link
+                  to={translated}
+                  hrefLang={LOCALE_META[other].hreflang}
+                  lang={LOCALE_META[other].htmlLang}
+                  className="inline-flex min-h-touch items-center font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  {L.readInOtherLanguage}
+                </Link>
+              </p>
+            )}
           </header>
 
           {post.cover && (

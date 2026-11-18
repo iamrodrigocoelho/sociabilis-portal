@@ -2,10 +2,12 @@ import { LetteredCard } from '../../components/LetteredCard'
 import { Reveal } from '../../components/Reveal'
 import { Section } from '../../components/Section'
 import { SectionHeader } from '../../components/SectionHeader'
-import { PILLARS } from '../../content/home'
+import { HOME } from '../../content/home'
+import { useLocale } from '../../i18n/context'
 
 /** RF06: pilares A, B, C. */
 export function PillarsSection() {
+  const PILLARS = HOME[useLocale()].pillars
   return (
     <Section labelledBy="pillars-title">
       <SectionHeader id="pillars-title" eyebrow={PILLARS.eyebrow} title={PILLARS.title} />

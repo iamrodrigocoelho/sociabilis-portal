@@ -1,5 +1,7 @@
 import { useContext, useEffect } from 'react'
+import { useLocale } from '../i18n/context'
 import { HeadContext } from '../lib/headContext'
+import { alternatesFor } from '../lib/i18nPaths'
 import { applyHead, type SeoData } from '../lib/seo'
 
 /**
@@ -7,7 +9,9 @@ import { applyHead, type SeoData } from '../lib/seo'
  * - No build (SSG): registra os dados no HeadContext; o <head> é escrito no HTML.
  * - No cliente: atualiza o <head> a cada navegação.
  */
-export function Seo(props: SeoData) {
+export function Seo(input: Omit<SeoData, 'locale' | 'alternates'>) {
+  const locale = useLocale()
+  const props: SeoData = { ...input, locale, alternates: input.noindex ? undefined : alternatesFor(input.path) }
   const collector = useContext(HeadContext)
   if (collector) collector.seo = props
 

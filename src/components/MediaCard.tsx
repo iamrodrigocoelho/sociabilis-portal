@@ -1,3 +1,6 @@
+import { UI } from '../content/ui'
+import { useLocale } from '../i18n/context'
+import type { Locale } from '../i18n/locales'
 import { formatDate } from '../lib/format'
 import { BrandPattern } from './BrandPattern'
 import { LinkArrow } from './LinkArrow'
@@ -14,10 +17,14 @@ export interface MediaCardData {
   href?: string
   thumbnail?: string
   thumbnailAlt?: string
+  /** Idioma do conteúdo, se diferente do da página. */
+  lang?: Locale
 }
 
 /** Thumbnail 16:9, badge de tipo, data, título e link. Sem thumbnail: padrão geométrico da marca. */
 export function MediaCard({ item, headingLevel: Heading = 'h3' }: { item: MediaCardData; headingLevel?: 'h2' | 'h3' }) {
+  const locale = useLocale()
+  const ui = UI[locale]
   return (
     <article className="flex h-full flex-col">
       <div className="aspect-video overflow-hidden rounded-lg bg-canvas-soft">
@@ -37,18 +44,24 @@ export function MediaCard({ item, headingLevel: Heading = 'h3' }: { item: MediaC
       </div>
       <div className="mt-lg flex flex-wrap items-center gap-x-md gap-y-xs text-caption text-body-mid">
         <span className="rounded-pill border border-line px-md py-xs font-medium text-ink">{item.badge}</span>
-        <time dateTime={item.date}>{formatDate(item.date)}</time>
+        <time dateTime={item.date}>{formatDate(item.date, locale)}</time>
         {item.source && <span>· {item.source}</span>}
       </div>
-      <Heading className="mt-md text-heading-sm text-ink">{item.title}</Heading>
+      <Heading className="mt-md text-heading-sm text-ink" lang={item.lang && item.lang !== locale ? item.lang : undefined}>
+        {item.title}
+      </Heading>
       <div className="mt-auto pt-md">
         {item.href ? (
           <LinkArrow href={item.href}>
-            Acessar<span className="sr-only">: {item.title} (abre em nova aba)</span>
+            {ui.media.access}
+            <span className="sr-only">
+              : {item.title} {ui.opensNewTab}
+            </span>
           </LinkArrow>
         ) : (
           <LinkArrow to={item.to}>
-            Ler artigo<span className="sr-only">: {item.title}</span>
+            {ui.media.readPost}
+            <span className="sr-only">: {item.title}</span>
           </LinkArrow>
         )}
       </div>

@@ -383,7 +383,56 @@ Cada fase deve terminar com build sem erros e pode virar um commit/PR separado.
 ---
 
 ## 13. Fora de escopo da v2
-CMS ou painel administrativo · autenticação · comentários no blog · busca no site · newsletter · versão em inglês · analytics/pixels · integração com CRM · cálculo real de pegada de carbono · página própria do AI Carbon Tracker.
+CMS ou painel administrativo · autenticação · comentários no blog · busca no site · newsletter · analytics/pixels · integração com CRM · cálculo real de pegada de carbono · página própria do AI Carbon Tracker.
 
 ## 14. Evoluções futuras
-Versão bilíngue PT/EN (a referência é bilíngue) · busca no blog · newsletter · página do AI Carbon Tracker · página do CNPJ Neutro · biblioteca de cases (com números reais) · diagnóstico gratuito/calculadora de maturidade · integração com CRM · analytics com consentimento · CMS headless, se a equipe editorial crescer.
+Busca no blog · newsletter · página do AI Carbon Tracker · página do CNPJ Neutro · biblioteca de cases (com números reais) · diagnóstico gratuito/calculadora de maturidade · integração com CRM · analytics com consentimento · CMS headless, se a equipe editorial crescer.
+
+---
+
+## 15. Versão em inglês (v2.1, novembro de 2026)
+
+Site bilíngue PT/EN. O português continua sendo o idioma padrão, na raiz, sem alterar as URLs existentes. O inglês fica sob `/en`, com caminhos traduzidos.
+
+### RF40: Rotas
+
+| PT | EN |
+|---|---|
+| `/` | `/en` |
+| `/ia-no-seu-negocio` | `/en/ai-for-your-business` |
+| `/blog` | `/en/blog` |
+| `/blog/pagina/:n` | `/en/blog/page/:n` |
+| `/blog/tag/:tag` | `/en/blog/tag/:tag` |
+| `/blog/:slug` | `/en/blog/:slug` |
+| `/politica-de-privacidade` | `/en/privacy-policy` |
+| 404 | 404 em inglês para qualquer caminho sob `/en` |
+| `/blog/rss.xml` | `/en/blog/rss.xml` |
+
+- Âncoras traduzidas: `#sobre`/`#about`, `#contato`/`#contact`, `#midia`/`#media`, `#como-trabalhamos`/`#how-we-work`. As âncoras das ofertas usam os mesmos slugs (já em inglês).
+- Parâmetro de interesse no link de contato: `?interesse=` (PT) e `?interest=` (EN), com os mesmos valores.
+
+### RF41: Seletor de idioma
+
+- Seletor "PT | EN" no header (desktop e menu mobile), com o idioma atual marcado.
+- Leva à página equivalente no outro idioma. Sem equivalente (post sem tradução, tag ou paginação inexistente no outro idioma), leva ao índice do blog do outro idioma.
+- Sem redirecionamento automático por idioma do navegador (`Accept-Language`): preserva a escolha do visitante e a indexação.
+
+### RF42: Conteúdo
+
+- Todo o conteúdo de `src/content/` existe nos dois idiomas, com a mesma estrutura (verificada pelo TypeScript).
+- Os textos em inglês são traduções do português e devem ser validados (**[VALIDAR EN]**). Não criar promessas, números ou informações que não existam na versão PT.
+- Blog: posts em `content/blog/pt/` e `content/blog/en/`. Cada idioma lista só os próprios posts e tem as próprias tags. O campo opcional `translation` (slug do post no outro idioma) liga as duas versões.
+- "Mídia e publicações": itens externos podem indicar o idioma; sem indicação, aparecem nos dois.
+- Autores: cargo traduzido.
+
+### RF43: SEO
+
+- `<html lang>` por página (`pt-BR` / `en`), `og:locale` e `og:locale:alternate`.
+- `hreflang` (`pt-BR`, `en`, `x-default` → PT) apenas entre páginas realmente equivalentes.
+- Canonical, sitemap e RSS por idioma. Títulos e descrições únicos em cada idioma.
+
+### RF44: Contato
+
+- Mesmo formulário, endpoint e lista de interesses nos dois idiomas. Rótulos traduzidos, e o reCAPTCHA no idioma da página.
+- O servidor responde com códigos de erro; as mensagens são exibidas no idioma da página.
+- O e-mail interno continua em português e informa o idioma do formulário.

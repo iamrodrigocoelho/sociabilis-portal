@@ -2,10 +2,12 @@ import { Button } from '../../components/Button'
 import { DarkBand } from '../../components/DarkBand'
 import { Eyebrow } from '../../components/Eyebrow'
 import { Reveal } from '../../components/Reveal'
-import { FINAL_CTA } from '../../content/aiForBusiness'
+import { AI_FOR_BUSINESS } from '../../content/aiForBusiness'
+import { useLocale } from '../../i18n/context'
 
 /** RF26: CTA final em faixa escura. */
 export function FinalCtaSection() {
+  const FINAL_CTA = AI_FOR_BUSINESS[useLocale()].finalCta
   return (
     <DarkBand labelledBy="final-cta-title">
       <Reveal className="max-w-3xl">

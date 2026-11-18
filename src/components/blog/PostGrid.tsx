@@ -1,11 +1,13 @@
 import type { PostMeta } from '../../lib/blogTypes'
 import { Card } from '../Card'
 import { LinkArrow } from '../LinkArrow'
-import { BLOG_EMPTY } from '../../content/blog'
+import { BLOG } from '../../content/blog'
+import { useLocale } from '../../i18n/context'
 import { PostCard } from './PostCard'
 
 /** Grid 3-up de posts, com estado vazio amigável. */
 export function PostGrid({ posts }: { posts: PostMeta[] }) {
+  const BLOG_EMPTY = BLOG[useLocale()].empty
   if (posts.length === 0) {
     return (
       <Card variant="soft" size="lg" className="max-w-2xl">

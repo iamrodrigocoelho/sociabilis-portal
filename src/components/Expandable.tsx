@@ -1,5 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { UI } from '../content/ui'
+import { useLocale } from '../i18n/context'
 
 interface ExpandableProps {
   openLabel?: string
@@ -9,7 +11,10 @@ interface ExpandableProps {
 }
 
 /** "Ver mais" nativo com <details>/<summary>; fundo suave quando aberto. */
-export function Expandable({ openLabel = 'Ver mais', closeLabel = 'Ver menos', className = '', children }: ExpandableProps) {
+export function Expandable({ openLabel, closeLabel, className = '', children }: ExpandableProps) {
+  const t = UI[useLocale()].expandable
+  openLabel ??= t.open
+  closeLabel ??= t.close
   return (
     <details className={`group rounded-md border border-line open:bg-canvas-soft ${className}`}>
       <summary className="flex min-h-touch cursor-pointer list-none items-center justify-between gap-md rounded-md px-xl py-md font-semibold text-primary hover:text-primary-hover [&::-webkit-details-marker]:hidden">

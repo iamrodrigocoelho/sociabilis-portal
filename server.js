@@ -80,7 +80,7 @@ function rateLimit(req, res, next) {
   if (recent.length >= RATE_MAX) {
     const retryAfter = Math.ceil((RATE_WINDOW_MS - (now - recent[0])) / 1000)
     res.setHeader('Retry-After', String(retryAfter))
-    return res.status(429).json({ error: 'Muitas tentativas em pouco tempo. Tente novamente em alguns minutos.' })
+    return res.status(429).json({ error: 'rate_limited' })
   }
   recent.push(now)
   hits.set(ip, recent)
@@ -103,18 +103,22 @@ async function verifyCaptcha(token) {
 /** Texto de uma linha: sem quebras (evita injeção no assunto do e-mail). */
 const oneLine = (s) => s.replace(/[\r\n]+/g, ' ').trim()
 
-/** Valida o corpo da requisição. Retorna { data } ou { error }. */
+/**
+ * Valida o corpo da requisição. Retorna { data } ou { error }, em que error é um
+ * código (ver ContactErrorCode em src/content/contactForm.ts); o cliente exibe a
+ * mensagem no idioma da página.
+ */
 function validateContact(body) {
   const b = body && typeof body === 'object' ? body : {}
   const text = (key, { required }) => {
     const value = b[key]
     if (value === undefined || value === null || value === '') {
-      return required ? { error: 'Campos obrigatórios faltando.' } : { value: '' }
+      return required ? { error: 'required' } : { value: '' }
     }
-    if (typeof value !== 'string') return { error: 'Dados inválidos.' }
+    if (typeof value !== 'string') return { error: 'invalid' }
     const trimmed = value.trim()
-    if (required && !trimmed) return { error: 'Campos obrigatórios faltando.' }
-    if (trimmed.length > LIMITS[key]) return { error: 'Um dos campos excede o tamanho permitido.' }
+    if (required && !trimmed) return { error: 'required' }
+    if (trimmed.length > LIMITS[key]) return { error: 'too_long' }
     return { value: trimmed }
   }
 
@@ -126,14 +130,15 @@ function validateContact(body) {
     mensagem: text('mensagem', { required: false }),
   }
   for (const f of Object.values(fields)) if (f.error) return { error: f.error }
-  if (!EMAIL_RE.test(fields.email.value)) return { error: 'E-mail inválido.' }
+  if (!EMAIL_RE.test(fields.email.value)) return { error: 'email' }
 
   const raw = b.interesses
-  if (!Array.isArray(raw) || raw.length === 0) return { error: 'Selecione ao menos um interesse.' }
+  if (!Array.isArray(raw) || raw.length === 0) return { error: 'interests' }
   if (raw.length > INTERESTS.size || raw.some((i) => typeof i !== 'string' || !INTERESTS.has(i))) {
-    return { error: 'Interesse inválido.' }
+    return { error: 'invalid' }
   }
   const interesses = [...new Set(raw)]
+  const idioma = b.idioma === 'en' ? 'en' : 'pt'
 
   return {
     data: {
@@ -143,13 +148,14 @@ function validateContact(body) {
       cargo: oneLine(fields.cargo.value),
       mensagem: fields.mensagem.value,
       interesses,
+      idioma,
     },
   }
 }
 
 app.post('/api/contact', express.json({ limit: '20kb' }), rateLimit, async (req, res) => {
   if (INTERESTS.size === 0) {
-    return res.status(503).json({ error: 'Formulário temporariamente indisponível.' })
+    return res.status(503).json({ error: 'unavailable' })
   }
 
   const { data, error } = validateContact(req.body)
@@ -157,12 +163,12 @@ app.post('/api/contact', express.json({ limit: '20kb' }), rateLimit, async (req,
 
   const captchaOk = await verifyCaptcha(req.body['g-recaptcha-response']).catch(() => false)
   if (!captchaOk) {
-    return res.status(400).json({ error: 'Verificação de segurança falhou. Tente novamente.' })
+    return res.status(400).json({ error: 'captcha' })
   }
 
   if (!resend || !process.env.CONTACT_EMAIL) {
     console.warn('RESEND_API_KEY ou CONTACT_EMAIL não configurados.')
-    return res.status(503).json({ error: 'Serviço de e-mail não configurado.' })
+    return res.status(503).json({ error: 'unavailable' })
   }
 
   const interestLabels = data.interesses.map((slug) => INTERESTS.get(slug))
@@ -178,6 +184,7 @@ app.post('/api/contact', express.json({ limit: '20kb' }), rateLimit, async (req,
         `E-mail: ${data.email}`,
         `Empresa: ${data.empresa}`,
         `Cargo: ${data.cargo || 'Não informado'}`,
+        `Idioma do formulário: ${data.idioma === 'en' ? 'inglês' : 'português'}`,
         '',
         'Interesses:',
         ...interestLabels.map((label) => `- ${label}`),
@@ -190,14 +197,14 @@ app.post('/api/contact', express.json({ limit: '20kb' }), rateLimit, async (req,
     return res.json({ ok: true })
   } catch (err) {
     console.error('Resend error:', err)
-    return res.status(500).json({ error: 'Erro ao enviar e-mail. Tente novamente mais tarde.' })
+    return res.status(500).json({ error: 'send_failed' })
   }
 })
 
 // JSON malformado ou corpo grande demais na API: resposta JSON, não a página 404/500.
 app.use('/api', (err, _req, res, next) => {
-  if (err?.type === 'entity.parse.failed') return res.status(400).json({ error: 'Dados inválidos.' })
-  if (err?.type === 'entity.too.large') return res.status(413).json({ error: 'Mensagem muito grande.' })
+  if (err?.type === 'entity.parse.failed') return res.status(400).json({ error: 'invalid' })
+  if (err?.type === 'entity.too.large') return res.status(413).json({ error: 'too_long' })
   return next(err)
 })
 
@@ -244,7 +251,9 @@ app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-cache')
   const file = routeMap.get(req.path)
   if (file) return res.sendFile(join(DIST, file))
-  return res.status(404).sendFile(join(DIST, '404.html'))
+  // 404 no idioma do caminho (PRD RF40): /en/... recebe a 404 em inglês.
+  const isEnglish = req.path === '/en' || req.path.startsWith('/en/')
+  return res.status(404).sendFile(join(DIST, isEnglish ? join('en', '404.html') : '404.html'))
 })
 
 const PORT = process.env.PORT ?? 3001

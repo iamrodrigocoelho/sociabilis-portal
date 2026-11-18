@@ -1,7 +1,9 @@
 import { Link } from 'react-router'
 import { CONTACT, SITE_CONFIG } from '../config/contact'
 import { partnerLogos } from '../content/logos'
-import { LEGAL_NAV, footerNav } from '../content/navigation'
+import { contactTo, footerNav, legalNav } from '../content/navigation'
+import { UI } from '../content/ui'
+import { useLocale } from '../i18n/context'
 import { Container } from './Container'
 import { LogoStrip } from './LogoStrip'
 import { Logo } from './Logo'
@@ -19,6 +21,8 @@ function contactLinks() {
 }
 
 export function Footer() {
+  const locale = useLocale()
+  const ui = UI[locale].footer
   const contacts = contactLinks()
 
   return (
@@ -27,11 +31,11 @@ export function Footer() {
         <div className="grid gap-3xl lg:grid-cols-12">
           <div className="lg:col-span-3">
             <Logo theme="night" className="h-8" />
-            <p className="mt-xl max-w-xs text-body-sm">{SITE_CONFIG.tagline}</p>
+            <p className="mt-xl max-w-xs text-body-sm">{ui.tagline}</p>
           </div>
 
           <div className="grid gap-2xl sm:grid-cols-2 lg:col-span-9 lg:grid-cols-4">
-            {footerNav().map((group) => (
+            {footerNav(locale).map((group) => (
               <nav key={group.title} aria-label={group.title}>
                 <h2 className="text-eyebrow text-on-night">{group.title}</h2>
                 <ul className="mt-lg flex flex-col gap-xs">
@@ -47,11 +51,11 @@ export function Footer() {
             ))}
 
             <div>
-              <h2 className="text-eyebrow text-on-night">Contato</h2>
+              <h2 className="text-eyebrow text-on-night">{ui.contactTitle}</h2>
               <ul className="mt-lg flex flex-col gap-xs">
                 <li>
-                  <Link to="/#contato" className={LINK}>
-                    Formulário de contato
+                  <Link to={contactTo(locale)} className={LINK}>
+                    {ui.contactForm}
                   </Link>
                 </li>
                 {contacts.map((c) => (
@@ -62,6 +66,7 @@ export function Footer() {
                       {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     >
                       {c.label}
+                      {c.external && <span className="sr-only"> {UI[locale].opensNewTab}</span>}
                     </a>
                   </li>
                 ))}
@@ -71,16 +76,16 @@ export function Footer() {
         </div>
 
         <LogoStrip
-          label="Parceiros e certificações"
+          label={ui.partners}
           logos={partnerLogos()}
           theme="night"
           className="mt-3xl border-t border-night-soft pt-2xl"
         />
 
         <div className="mt-3xl flex flex-col gap-sm border-t border-night-soft pt-lg text-caption sm:flex-row sm:items-center sm:justify-between">
-          <p>{SITE_CONFIG.copyright}</p>
+          <p>{ui.copyright(new Date().getFullYear())}</p>
           <ul className="flex flex-wrap gap-x-xl">
-            {LEGAL_NAV.map((item) => (
+            {legalNav(locale).map((item) => (
               <li key={item.to}>
                 <Link to={item.to} className="inline-flex min-h-touch items-center underline-offset-4 hover:text-on-night hover:underline">
                   {item.label}
@@ -88,7 +93,7 @@ export function Footer() {
               </li>
             ))}
             <li className="flex min-h-touch items-center">
-              Uma divisão da&nbsp;
+              {ui.divisionOf}&nbsp;
               <a
                 href={SITE_CONFIG.mainSite}
                 target="_blank"

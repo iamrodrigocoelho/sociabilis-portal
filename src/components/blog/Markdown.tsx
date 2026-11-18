@@ -1,5 +1,7 @@
 import { Fragment, type ReactNode } from 'react'
 import { Link } from 'react-router'
+import { UI } from '../../content/ui'
+import { useLocale } from '../../i18n/context'
 import type { MdBlock, MdInline } from '../../lib/blogTypes'
 
 /**
@@ -11,6 +13,7 @@ import type { MdBlock, MdInline } from '../../lib/blogTypes'
 const isExternal = (url: string) => /^https?:\/\//i.test(url)
 
 function Inline({ nodes }: { nodes: MdInline[] }) {
+  const opensNewTab = UI[useLocale()].opensNewTab
   return (
     <>
       {nodes.map((node, i) => {
@@ -57,7 +60,7 @@ function Inline({ nodes }: { nodes: MdInline[] }) {
                   {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 >
                   {children}
-                  {external && <span className="sr-only"> (abre em nova aba)</span>}
+                  {external && <span className="sr-only"> {opensNewTab}</span>}
                 </a>
               )
             }
@@ -94,6 +97,7 @@ const HEADING_CLASS = {
 }
 
 function Blocks({ blocks, tight = false }: { blocks: MdBlock[]; tight?: boolean }) {
+  const ui = UI[useLocale()]
   return (
     <>
       {blocks.map((block, i): ReactNode => {
@@ -147,7 +151,7 @@ function Blocks({ blocks, tight = false }: { blocks: MdBlock[]; tight?: boolean 
                 {block.children.map((item, j) => (
                   <li key={j} className={item.checked !== undefined ? 'list-none -ml-xl' : ''}>
                     {item.checked !== undefined && (
-                      <input type="checkbox" checked={item.checked} disabled className="mr-sm accent-primary" aria-label={item.checked ? 'Concluído' : 'Pendente'} />
+                      <input type="checkbox" checked={item.checked} disabled className="mr-sm accent-primary" aria-label={item.checked ? ui.taskDone : ui.taskPending} />
                     )}
                     <Blocks blocks={item.children} tight />
                   </li>

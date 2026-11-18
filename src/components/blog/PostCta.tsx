@@ -1,8 +1,10 @@
-import { POST_CTA } from '../../content/blog'
+import { BLOG } from '../../content/blog'
+import { useLocale } from '../../i18n/context'
 import { Button } from '../Button'
 
 /** Convite ao contato ao final do post. */
 export function PostCta() {
+  const POST_CTA = BLOG[useLocale()].postCta
   return (
     <aside aria-labelledby="post-cta-title" className="rounded-lg bg-canvas-soft p-2xl">
       <h2 id="post-cta-title" className="text-heading-sm">

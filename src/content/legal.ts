@@ -1,3 +1,5 @@
+import type { Locale } from '../i18n/locales'
+
 /**
  * Política de privacidade. [ASSET] Preencher `sections` com o texto aprovado
  * ou informar `externalUrl`. Enquanto vazia, a página não é indexada.
@@ -7,15 +9,18 @@ export interface PolicySection {
   paragraphs: string[]
 }
 
-export const PRIVACY_POLICY: {
+interface PrivacyPolicy {
   externalUrl: string | null
+  /** AAAA-MM-DD */
   updatedAt: string | null
   sections: PolicySection[]
-} = {
-  externalUrl: null,
-  updatedAt: null,
-  sections: [],
 }
 
-export const hasPrivacyPolicy = () =>
-  Boolean(PRIVACY_POLICY.externalUrl) || PRIVACY_POLICY.sections.length > 0
+/** Uma versão por idioma. [ASSET] Texto PT e tradução EN aprovados. */
+export const PRIVACY_POLICY: Record<Locale, PrivacyPolicy> = {
+  pt: { externalUrl: null, updatedAt: null, sections: [] },
+  en: { externalUrl: null, updatedAt: null, sections: [] },
+}
+
+export const hasPrivacyPolicy = (locale: Locale) =>
+  Boolean(PRIVACY_POLICY[locale].externalUrl) || PRIVACY_POLICY[locale].sections.length > 0

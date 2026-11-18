@@ -1,13 +1,14 @@
 /**
- * Plugin Vite do blog (RF30).
+ * Plugin Vite do blog (RF30, RF42).
  *
- * Lê content/blog/*.md (arquivos iniciados por "_" são ignorados), valida o
+ * Lê content/blog/pt/*.md e content/blog/en/*.md (arquivos iniciados por "_"
+ * são ignorados; o idioma vem da pasta), valida o
  * frontmatter e converte o Markdown (GFM) numa árvore própria, sem HTML bruto.
  * Qualquer erro de validação interrompe o build.
  *
  * Módulos virtuais:
  *  - `virtual:blog-index`: metadados de todos os posts publicados + loaders dos corpos.
- *  - `virtual:blog-post/<slug>`: corpo de um post (um chunk por post).
+ *  - `virtual:blog-post/<lang>/<slug>`: corpo de um post (um chunk por post).
  *
  * Em produção, posts com `draft: true` ou data futura ficam de fora.
  * Em `npm run dev`, rascunhos e posts futuros aparecem para revisão.
@@ -21,8 +22,8 @@ import { gfmFromMarkdown } from 'mdast-util-gfm'
 import { gfm } from 'micromark-extension-gfm'
 import type { Plugin, ViteDevServer } from 'vite'
 import { parse as parseYaml } from 'yaml'
-import { AUTHORS } from '../src/content/authors'
-import type { MdBlock, MdInline, MdListItem, PostBody, PostImage, PostMeta, TocItem } from '../src/lib/blogTypes'
+import { AUTHORS } from '../src/content/authors.ts'
+import type { MdBlock, MdInline, MdListItem, PostBody, PostImage, PostMeta, TocItem } from '../src/lib/blogTypes.ts'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const BLOG_DIR = join(ROOT, 'content', 'blog')
@@ -32,11 +33,16 @@ const INDEX_ID = 'virtual:blog-index'
 const POST_PREFIX = 'virtual:blog-post/'
 const RESOLVED = '\0'
 
-/** Slugs que colidiriam com rotas do blog. */
-const RESERVED_SLUGS = new Set(['pagina', 'tag', 'rss.xml'])
+type Lang = PostMeta['lang']
+const LANGS: Lang[] = ['pt', 'en']
+/** Slugs que colidiriam com rotas do blog em cada idioma. */
+const RESERVED_SLUGS: Record<Lang, Set<string>> = {
+  pt: new Set(['pagina', 'tag', 'rss.xml']),
+  en: new Set(['page', 'tag', 'rss.xml']),
+}
 /** Ids de elementos do layout que um heading não pode reutilizar. */
-const RESERVED_IDS = new Set(['root', 'main-content', 'mobile-menu', 'contato', 'sobre'])
-const KNOWN_KEYS = new Set(['title', 'slug', 'description', 'date', 'updated', 'author', 'tags', 'cover', 'coverAlt', 'draft'])
+const RESERVED_IDS = new Set(['root', 'main-content', 'mobile-menu', 'contato', 'sobre', 'contact', 'about', 'midia', 'media'])
+const KNOWN_KEYS = new Set(['title', 'slug', 'description', 'date', 'updated', 'author', 'tags', 'cover', 'coverAlt', 'draft', 'translation'])
 const WORDS_PER_MINUTE = 200
 
 export function slugify(text: string): string {
@@ -78,7 +84,7 @@ interface ParsedFrontmatter {
   body: string
 }
 
-function parseFrontmatter(file: string, raw: string): ParsedFrontmatter {
+function parseFrontmatter(file: string, lang: Lang, raw: string): ParsedFrontmatter {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
   if (!match) fail(file, 'frontmatter ausente (o arquivo deve começar com um bloco --- ... ---).')
 
@@ -110,8 +116,11 @@ function parseFrontmatter(file: string, raw: string): ParsedFrontmatter {
 
   const slug = str('slug', true)!
   if (!KEBAB.test(slug)) fail(file, `slug "${slug}" deve estar em kebab-case, sem acentos.`)
-  if (RESERVED_SLUGS.has(slug)) fail(file, `slug "${slug}" é reservado.`)
-  if (`${slug}.md` !== file) fail(file, `o nome do arquivo deve ser "${slug}.md" (igual ao slug).`)
+  if (RESERVED_SLUGS[lang].has(slug)) fail(file, `slug "${slug}" é reservado.`)
+  if (`${lang}/${slug}.md` !== file) fail(file, `o nome do arquivo deve ser "${slug}.md" (igual ao slug).`)
+
+  const translation = str('translation', false)
+  if (translation !== undefined && !KEBAB.test(translation)) fail(file, `translation "${translation}" deve ser um slug em kebab-case.`)
 
   const description = str('description', true)!
   if (description.length < 120 || description.length > 160) {
@@ -150,7 +159,10 @@ function parseFrontmatter(file: string, raw: string): ParsedFrontmatter {
   if (data.draft !== undefined && typeof data.draft !== 'boolean') fail(file, '"draft" deve ser true ou false.')
   const draft = data.draft === true
 
-  return { meta: { slug, title, description, date, updated, author, tags, cover, draft }, body: match[2] }
+  return {
+    meta: { lang, slug, translation, title, description, date, updated, author, tags, cover, draft },
+    body: match[2],
+  }
 }
 
 // --- Markdown → árvore segura -------------------------------------------------------
@@ -285,30 +297,54 @@ interface LoadedPost {
 }
 
 function loadPosts(includeUnpublished: boolean): LoadedPost[] {
-  if (!existsSync(BLOG_DIR)) return []
-  const files = readdirSync(BLOG_DIR).filter((f) => f.endsWith('.md') && !f.startsWith('_'))
   const today = new Date().toISOString().slice(0, 10)
-  const seen = new Set<string>()
-  const posts: LoadedPost[] = []
+  const all: LoadedPost[] = []
 
-  for (const file of files) {
-    const raw = readFileSync(join(BLOG_DIR, file), 'utf8')
-    const { meta, body } = parseFrontmatter(file, raw)
-    if (seen.has(meta.slug)) fail(file, `slug "${meta.slug}" duplicado.`)
-    seen.add(meta.slug)
+  for (const lang of LANGS) {
+    const dir = join(BLOG_DIR, lang)
+    if (!existsSync(dir)) continue
+    const seen = new Set<string>()
+    for (const name of readdirSync(dir).filter((f) => f.endsWith('.md') && !f.startsWith('_'))) {
+      const file = `${lang}/${name}`
+      const raw = readFileSync(join(dir, name), 'utf8')
+      const { meta, body } = parseFrontmatter(file, lang, raw)
+      if (seen.has(meta.slug)) fail(file, `slug "${meta.slug}" duplicado.`)
+      seen.add(meta.slug)
 
-    const tree = fromMarkdown(body, { extensions: [gfm()], mdastExtensions: [gfmFromMarkdown()] })
-    const converter = new BodyConverter(file)
-    const blocks = converter.blocks(tree.children)
-    if (blocks.length === 0) fail(file, 'o post não tem conteúdo.')
-
-    const published = !meta.draft && meta.date <= today
-    if (!published && !includeUnpublished) continue
-    posts.push({ meta: { ...meta, readingMinutes: converter.readingMinutes }, body: { blocks, toc: converter.toc } })
+      const tree = fromMarkdown(body, { extensions: [gfm()], mdastExtensions: [gfmFromMarkdown()] })
+      const converter = new BodyConverter(file)
+      const blocks = converter.blocks(tree.children)
+      if (blocks.length === 0) fail(file, 'o post não tem conteúdo.')
+      all.push({ meta: { ...meta, readingMinutes: converter.readingMinutes }, body: { blocks, toc: converter.toc } })
+    }
   }
+
+  // Traduções: o post indicado deve existir no outro idioma e apontar de volta.
+  for (const { meta } of all) {
+    if (!meta.translation) continue
+    const other = meta.lang === 'pt' ? 'en' : 'pt'
+    const target = all.find((p) => p.meta.lang === other && p.meta.slug === meta.translation)
+    const file = `${meta.lang}/${meta.slug}.md`
+    if (!target) fail(file, `translation "${meta.translation}" não existe em content/blog/${other}/.`)
+    if (target.meta.translation !== meta.slug) {
+      fail(file, `${other}/${target.meta.slug}.md deve ter translation: "${meta.slug}" (a ligação precisa ser recíproca).`)
+    }
+  }
+
+  const isPublished = (m: PostMeta) => !m.draft && m.date <= today
+  const posts = all
+    .filter((p) => includeUnpublished || isPublished(p.meta))
+    .map((p) => {
+      // Tradução ainda não publicada: não linkar para ela no build de produção.
+      if (!p.meta.translation || includeUnpublished) return p
+      const target = all.find((t) => t.meta.lang !== p.meta.lang && t.meta.slug === p.meta.translation)
+      return target && isPublished(target.meta) ? p : { ...p, meta: { ...p.meta, translation: undefined } }
+    })
 
   return posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date) || a.meta.slug.localeCompare(b.meta.slug))
 }
+
+const postKey = (meta: Pick<PostMeta, 'lang' | 'slug'>) => `${meta.lang}/${meta.slug}`
 
 export function blogPlugin(): Plugin {
   let includeUnpublished = false
@@ -330,8 +366,9 @@ export function blogPlugin(): Plugin {
     },
     buildStart() {
       cache = null
-      if (existsSync(BLOG_DIR)) {
-        for (const f of readdirSync(BLOG_DIR)) this.addWatchFile(join(BLOG_DIR, f))
+      for (const lang of LANGS) {
+        const dir = join(BLOG_DIR, lang)
+        if (existsSync(dir)) for (const f of readdirSync(dir)) this.addWatchFile(join(dir, f))
       }
       posts() // valida cedo: um erro aqui interrompe o build
     },
@@ -352,7 +389,7 @@ export function blogPlugin(): Plugin {
       if (virtualId === INDEX_ID) {
         const list = posts()
         const loaders = list
-          .map((p) => `  ${JSON.stringify(p.meta.slug)}: () => import(${JSON.stringify(POST_PREFIX + p.meta.slug)}),`)
+          .map((p) => `  ${JSON.stringify(postKey(p.meta))}: () => import(${JSON.stringify(POST_PREFIX + postKey(p.meta))}),`)
           .join('\n')
         return [
           `export const posts = ${JSON.stringify(list.map((p) => p.meta))};`,
@@ -361,9 +398,9 @@ export function blogPlugin(): Plugin {
       }
 
       if (virtualId.startsWith(POST_PREFIX)) {
-        const slug = virtualId.slice(POST_PREFIX.length)
-        const post = posts().find((p) => p.meta.slug === slug)
-        if (!post) this.error(`[blog] post "${slug}" não encontrado.`)
+        const key = virtualId.slice(POST_PREFIX.length)
+        const post = posts().find((p) => postKey(p.meta) === key)
+        if (!post) this.error(`[blog] post "${key}" não encontrado.`)
         return `export default ${JSON.stringify(post.body)};`
       }
     },

@@ -1,12 +1,16 @@
 import { Check, Link2 } from 'lucide-react'
 import { useState } from 'react'
-import { BLOG_LABELS as L } from '../../content/blog'
+import { BLOG } from '../../content/blog'
+import { UI } from '../../content/ui'
+import { useLocale } from '../../i18n/context'
 
 const LINK =
   'inline-flex min-h-touch items-center gap-sm rounded-pill border border-line px-lg text-body-sm font-medium text-ink transition-colors duration-200 hover:border-ink'
 
 /** Compartilhamento sem scripts de terceiros: links diretos + copiar link. */
 export function ShareLinks({ url, title }: { url: string; title: string }) {
+  const locale = useLocale()
+  const L = BLOG[locale].labels
   const [copied, setCopied] = useState(false)
 
   const copy = async () => {
@@ -31,7 +35,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
             className={LINK}
           >
             {L.shareLinkedIn}
-            <span className="sr-only"> (abre em nova aba)</span>
+            <span className="sr-only"> {UI[locale].opensNewTab}</span>
           </a>
         </li>
         <li>
@@ -42,7 +46,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
             className={LINK}
           >
             {L.shareWhatsApp}
-            <span className="sr-only"> (abre em nova aba)</span>
+            <span className="sr-only"> {UI[locale].opensNewTab}</span>
           </a>
         </li>
         <li>

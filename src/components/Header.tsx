@@ -2,9 +2,12 @@ import { Menu, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { Link, NavLink } from 'react-router'
 import { SITE_CONFIG } from '../config/contact'
-import { HEADER_CTA, MAIN_NAV, isAnchor, type NavItem } from '../content/navigation'
+import { headerCta, isAnchor, mainNav, type NavItem } from '../content/navigation'
+import { UI } from '../content/ui'
+import { useLocale } from '../i18n/context'
 import { Button } from './Button'
 import { Container } from './Container'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import { Logo } from './Logo'
 
 const MOBILE_MENU_ID = 'mobile-menu'
@@ -36,6 +39,10 @@ function DesktopNavLink({ item }: { item: NavItem }) {
 }
 
 export function Header() {
+  const locale = useLocale()
+  const ui = UI[locale]
+  const NAV = mainNav(locale)
+  const CTA = headerCta(locale)
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const toggleRef = useRef<HTMLButtonElement>(null)
@@ -94,18 +101,21 @@ export function Header() {
     <header
       ref={headerRef}
       onKeyDown={trapFocus}
-      className={`sticky top-0 z-50 border-b bg-canvas/90 backdrop-blur-md transition-colors duration-200 ${
+      className={`sticky top-0 z-50 border-b transition-colors duration-200 ${
         scrolled || open ? 'border-line' : 'border-transparent'
       }`}
     >
+      {/* Fundo translúcido numa camada própria: backdrop-filter no <header> faria o
+          painel fixo do menu mobile ser posicionado em relação ao header (altura 0). */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-canvas/90 backdrop-blur-md" />
       <Container className="flex h-16 items-center justify-between gap-xl lg:h-20">
-        <Link to="/" aria-label={`${SITE_CONFIG.name}: página inicial`} className="shrink-0" onClick={() => close()}>
+        <Link to={NAV[0].to} aria-label={ui.homeLink(SITE_CONFIG.name)} className="shrink-0" onClick={() => close()}>
           <Logo />
         </Link>
 
-        <nav aria-label="Navegação principal" className="hidden lg:block">
+        <nav aria-label={ui.mainNav} className="hidden lg:block">
           <ul className="flex items-center gap-2xl">
-            {MAIN_NAV.map((item) => (
+            {NAV.map((item) => (
               <li key={item.to}>
                 <DesktopNavLink item={item} />
               </li>
@@ -113,8 +123,9 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="hidden lg:block">
-          <Button to={HEADER_CTA.to}>{HEADER_CTA.label}</Button>
+        <div className="hidden items-center gap-lg lg:flex">
+          <LanguageSwitcher />
+          <Button to={CTA.to}>{CTA.label}</Button>
         </div>
 
         <button
@@ -124,7 +135,7 @@ export function Header() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls={MOBILE_MENU_ID}
-          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+          aria-label={open ? ui.closeMenu : ui.openMenu}
           className="-mr-sm inline-flex min-h-touch min-w-touch items-center justify-center rounded-md text-ink hover:bg-canvas-soft lg:hidden"
         >
           {open ? <X size={24} strokeWidth={1.5} aria-hidden="true" /> : <Menu size={24} strokeWidth={1.5} aria-hidden="true" />}
@@ -134,12 +145,12 @@ export function Header() {
       {open && (
         <nav
           id={MOBILE_MENU_ID}
-          aria-label="Menu"
+          aria-label={ui.menu}
           className="fixed inset-x-0 bottom-0 top-16 overflow-y-auto bg-canvas shadow-overlay lg:hidden"
         >
           <Container className="flex min-h-full flex-col py-2xl">
             <ul className="flex flex-col">
-              {MAIN_NAV.map((item) => (
+              {NAV.map((item) => (
                 <li key={item.to} className="border-b border-line">
                   {isAnchor(item) ? (
                     <Link to={item.to} onClick={() => close()} className="block py-lg text-display-md text-ink">
@@ -160,9 +171,10 @@ export function Header() {
                 </li>
               ))}
             </ul>
-            <div className="mt-auto pt-2xl">
-              <Button to={HEADER_CTA.to} className="w-full" onClick={() => close()}>
-                {HEADER_CTA.label}
+            <div className="mt-auto flex flex-col gap-lg pt-2xl">
+              <LanguageSwitcher onNavigate={() => close()} />
+              <Button to={CTA.to} className="w-full" onClick={() => close()}>
+                {CTA.label}
               </Button>
             </div>
           </Container>

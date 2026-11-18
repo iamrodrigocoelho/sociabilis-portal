@@ -1,10 +1,12 @@
 import { Button } from '../../components/Button'
 import { DarkBand } from '../../components/DarkBand'
 import { Reveal } from '../../components/Reveal'
-import { CTA_BAND } from '../../content/home'
+import { HOME } from '../../content/home'
+import { useLocale } from '../../i18n/context'
 
 /** RF08: CTA intermediário em faixa escura. */
 export function CtaBandSection() {
+  const CTA_BAND = HOME[useLocale()].ctaBand
   return (
     <DarkBand labelledBy="cta-band-title">
       <Reveal className="flex flex-col gap-2xl lg:flex-row lg:items-end lg:justify-between">

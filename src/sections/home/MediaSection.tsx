@@ -2,12 +2,15 @@ import { LinkArrow } from '../../components/LinkArrow'
 import { MediaCard } from '../../components/MediaCard'
 import { Reveal } from '../../components/Reveal'
 import { Section } from '../../components/Section'
-import { MEDIA_SECTION } from '../../content/home'
+import { HOME } from '../../content/home'
+import { useLocale } from '../../i18n/context'
 import { getLatestPublications } from '../../lib/publications'
 
 /** RF09: 3 itens mais recentes (posts + mídia externa). Oculta sem itens. */
 export function MediaSection() {
-  const items = getLatestPublications(MEDIA_SECTION.limit)
+  const locale = useLocale()
+  const MEDIA_SECTION = HOME[locale].mediaSection
+  const items = getLatestPublications(locale, MEDIA_SECTION.limit)
   if (items.length === 0) return null
 
   return (

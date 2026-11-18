@@ -1,5 +1,6 @@
 import { createElement, lazy, type ComponentType } from 'react'
 import { matchRoutes } from 'react-router'
+import { BLOG_PAGE_SEGMENT, LOCALES, PATHS, type Locale } from './i18n/locales'
 
 /**
  * Página carregada sob demanda (code splitting por rota) que pode ser
@@ -55,20 +56,38 @@ export interface AppRoute {
 
 export const NOT_FOUND_PATH = '*'
 
+const PAGES = {
+  home: lazyPage('HomePage'),
+  offers: lazyPage('AiForBusinessPage'),
+  blog: lazyPage('BlogPage'),
+  blogTag: lazyPage('BlogTagPage'),
+  blogPost: lazyPage('BlogPostPage'),
+  privacy: lazyPage('PrivacyPolicyPage'),
+  notFound: lazyPage('NotFoundPage'),
+}
+
+/** Rotas de um idioma (RF40). As páginas leem o idioma do contexto (Layout). */
+function localeRoutes(locale: Locale): AppRoute[] {
+  const blog = PATHS.blog[locale]
+  return [
+    { path: PATHS.home[locale], page: PAGES.home },
+    { path: PATHS.offers[locale], page: PAGES.offers },
+    { path: blog, page: PAGES.blog },
+    { path: `${blog}/${BLOG_PAGE_SEGMENT[locale]}/:page`, page: PAGES.blog },
+    { path: `${blog}/tag/:tag`, page: PAGES.blogTag },
+    {
+      path: `${blog}/:slug`,
+      page: PAGES.blogPost,
+      loadData: async ({ slug }) => (await import('./lib/blogBodies')).loadPostBody(locale, slug),
+      dataModules: ({ slug }) => ['src/lib/blogBodies.ts', `virtual:blog-post/${locale}/${slug}`],
+    },
+    { path: PATHS.privacy[locale], page: PAGES.privacy },
+  ]
+}
+
 export const routes: AppRoute[] = [
-  { path: '/', page: lazyPage('HomePage') },
-  { path: '/ia-no-seu-negocio', page: lazyPage('AiForBusinessPage') },
-  { path: '/blog', page: lazyPage('BlogPage') },
-  { path: '/blog/pagina/:page', page: lazyPage('BlogPage') },
-  { path: '/blog/tag/:tag', page: lazyPage('BlogTagPage') },
-  {
-    path: '/blog/:slug',
-    page: lazyPage('BlogPostPage'),
-    loadData: async ({ slug }) => (await import('./lib/blogBodies')).loadPostBody(slug),
-    dataModules: ({ slug }) => ['src/lib/blogBodies.ts', `virtual:blog-post/${slug}`],
-  },
-  { path: '/politica-de-privacidade', page: lazyPage('PrivacyPolicyPage') },
-  { path: NOT_FOUND_PATH, page: lazyPage('NotFoundPage') },
+  ...LOCALES.flatMap(localeRoutes),
+  { path: NOT_FOUND_PATH, page: PAGES.notFound },
 ]
 
 const matchable = routes.map((r) => ({ path: r.path }))
@@ -98,5 +117,7 @@ export function modulesFor(pathname: string): string[] {
 
 /** Rotas estáticas (sem parâmetros) a pré-renderizar. As do blog vêm de lib/blog. */
 export function getStaticRoutePaths(): string[] {
-  return routes.map((r) => r.path).filter((p) => p !== NOT_FOUND_PATH && !p.includes(':'))
+  const blogIndexes = new Set<string>(LOCALES.map((l) => PATHS.blog[l]))
+  // Os índices do blog entram por blogPrerenderPaths().
+  return routes.map((r) => r.path).filter((p) => p !== NOT_FOUND_PATH && !p.includes(':') && !blogIndexes.has(p))
 }

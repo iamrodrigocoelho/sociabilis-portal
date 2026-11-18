@@ -11,7 +11,7 @@ import { blogPrerenderPaths } from './lib/blog'
 import { getStaticRoutePaths, preloadAllRoutes, preloadRoute } from './routes'
 
 export { modulesFor } from './routes'
-export { getBlogFeed } from './lib/blogFeed'
+export { getBlogFeeds } from './lib/blogFeed'
 
 /** Todos os caminhos que geram HTML no build (exceto a 404). */
 export function getPrerenderPaths(): string[] {

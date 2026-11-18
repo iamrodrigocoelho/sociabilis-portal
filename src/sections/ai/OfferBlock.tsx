@@ -4,7 +4,8 @@ import { Expandable } from '../../components/Expandable'
 import { FeatureItem } from '../../components/FeatureItem'
 import { LinkArrow } from '../../components/LinkArrow'
 import { Steps } from '../../components/Steps'
-import { METHODOLOGY, OFFER_BLOCK_LABELS as L } from '../../content/aiForBusiness'
+import { AI_FOR_BUSINESS } from '../../content/aiForBusiness'
+import { useLocale } from '../../i18n/context'
 import { contactTo } from '../../content/navigation'
 import { offerCtaLabel, offerNumber, type Offer } from '../../content/offers'
 
@@ -32,6 +33,8 @@ function ArrowList({ items }: { items: string[] }) {
  * não são renderizados.
  */
 export function OfferBlock({ offer, index }: { offer: Offer; index: number }) {
+  const locale = useLocale()
+  const { blockLabels: L, methodology: METHODOLOGY } = AI_FOR_BUSINESS[locale]
   const titleId = `${offer.slug}-title`
   const number = offerNumber(index)
 
@@ -142,7 +145,7 @@ export function OfferBlock({ offer, index }: { offer: Offer; index: number }) {
 
           {/* 9: CTA */}
           <div>
-            <Button to={offer.pagePath ?? contactTo(offer.slug)}>{offerCtaLabel(offer)}</Button>
+            <Button to={offer.pagePath ?? contactTo(locale, offer.slug)}>{offerCtaLabel(locale, offer)}</Button>
           </div>
         </div>
       </Container>

@@ -1,4 +1,5 @@
 import * as blogIndex from 'virtual:blog-index'
+import type { Locale } from '../i18n/locales'
 import type { PostBody } from './blogTypes'
 
 const bodyLoaders = blogIndex.bodyLoaders as Record<string, () => Promise<{ default: PostBody }>>
@@ -11,17 +12,21 @@ const bodyLoaders = blogIndex.bodyLoaders as Record<string, () => Promise<{ defa
 const loaded = new Map<string, PostBody>()
 const pending = new Map<string, Promise<PostBody | undefined>>()
 
-export function loadPostBody(slug: string | undefined): Promise<PostBody | undefined> {
-  if (!slug || !(slug in bodyLoaders)) return Promise.resolve(undefined)
-  const cached = loaded.get(slug)
+const keyOf = (locale: Locale, slug: string) => `${locale}/${slug}`
+
+export function loadPostBody(locale: Locale, slug: string | undefined): Promise<PostBody | undefined> {
+  if (!slug) return Promise.resolve(undefined)
+  const key = keyOf(locale, slug)
+  if (!(key in bodyLoaders)) return Promise.resolve(undefined)
+  const cached = loaded.get(key)
   if (cached) return Promise.resolve(cached)
-  let promise = pending.get(slug)
+  let promise = pending.get(key)
   if (!promise) {
-    promise = bodyLoaders[slug]().then((mod) => {
-      loaded.set(slug, mod.default)
+    promise = bodyLoaders[key]().then((mod) => {
+      loaded.set(key, mod.default)
       return mod.default
     })
-    pending.set(slug, promise)
+    pending.set(key, promise)
   }
   return promise
 }
@@ -30,8 +35,9 @@ export function loadPostBody(slug: string | undefined): Promise<PostBody | undef
  * Lê o corpo já carregado. Se ainda não estiver (navegação client-side),
  * suspende a renderização até carregar (padrão Suspense do React 18).
  */
-export function readPostBody(slug: string): PostBody | undefined {
-  const body = loaded.get(slug)
-  if (body || !(slug in bodyLoaders)) return body
-  throw loadPostBody(slug)
+export function readPostBody(locale: Locale, slug: string): PostBody | undefined {
+  const key = keyOf(locale, slug)
+  const body = loaded.get(key)
+  if (body || !(key in bodyLoaders)) return body
+  throw loadPostBody(locale, slug)
 }

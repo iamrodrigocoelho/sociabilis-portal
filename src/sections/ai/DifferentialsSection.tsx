@@ -2,10 +2,12 @@ import { Card } from '../../components/Card'
 import { Reveal } from '../../components/Reveal'
 import { Section } from '../../components/Section'
 import { SectionHeader } from '../../components/SectionHeader'
-import { DIFFERENTIALS } from '../../content/aiForBusiness'
+import { AI_FOR_BUSINESS } from '../../content/aiForBusiness'
+import { useLocale } from '../../i18n/context'
 
 /** RF24: 6 diferenciais em grid 3-up. */
 export function DifferentialsSection() {
+  const DIFFERENTIALS = AI_FOR_BUSINESS[useLocale()].differentials
   return (
     <Section labelledBy="differentials-title">
       <SectionHeader

@@ -1,9 +1,10 @@
 ---
 title: "Por onde começar a implantar IA na sua empresa"
 slug: "por-onde-comecar-a-implantar-ia"
+translation: "where-to-start-deploying-ai"
 description: "Comece por um problema real, não por um modelo: como escolher o primeiro caso de uso de IA, com critérios de sucesso, dados e governança desde o início."
 date: "2026-11-18"
-author: "equipe"
+author: "inessa"
 tags: ["Implantação de IA", "Governança"]
 draft: false
 ---

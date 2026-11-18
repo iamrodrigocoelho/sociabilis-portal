@@ -3,21 +3,29 @@ import { Section } from '../components/Section'
 import { SectionHeader } from '../components/SectionHeader'
 import { Seo } from '../components/Seo'
 import { PRIVACY_POLICY, hasPrivacyPolicy } from '../content/legal'
-import { PAGE_SEO, PRIVACY_PAGE } from '../content/pages'
+import { PAGE_SEO, PRIVACY_PAGE as PRIVACY_BY_LOCALE } from '../content/pages'
+import { useLocale } from '../i18n/context'
+import { formatDate } from '../lib/format'
 
 export default function PrivacyPolicyPage() {
-  const ready = hasPrivacyPolicy()
-  const { externalUrl, sections, updatedAt } = PRIVACY_POLICY
+  const locale = useLocale()
+  const PRIVACY_PAGE = PRIVACY_BY_LOCALE[locale]
+  const ready = hasPrivacyPolicy(locale)
+  const { externalUrl, sections, updatedAt } = PRIVACY_POLICY[locale]
 
   return (
     <>
       {/* Enquanto o texto não existe, a página não é indexada nem entra no sitemap. */}
-      <Seo {...PAGE_SEO.privacy} noindex={!ready} />
+      <Seo {...PAGE_SEO[locale].privacy} noindex={!ready} />
       <Section spacing="hero" labelledBy="privacy-title">
         <SectionHeader as="h1" size="lg" id="privacy-title" eyebrow={PRIVACY_PAGE.eyebrow} title={PRIVACY_PAGE.title} />
 
         <div className="max-w-prose text-prose text-body">
-          {updatedAt && <p className="text-caption text-body-mid">Atualizada em {updatedAt}</p>}
+          {updatedAt && (
+            <p className="text-caption text-body-mid">
+              {PRIVACY_PAGE.updatedAt} <time dateTime={updatedAt}>{formatDate(updatedAt, locale)}</time>
+            </p>
+          )}
 
           {sections.map((section) => (
             <section key={section.heading} className="mt-2xl">

@@ -1,4 +1,5 @@
-import { NOT_FOUND, PAGE_SEO } from '../content/pages'
+import { NOT_FOUND as NOT_FOUND_BY_LOCALE, PAGE_SEO } from '../content/pages'
+import { useLocale } from '../i18n/context'
 import { Button } from './Button'
 import { Section } from './Section'
 import { SectionHeader } from './SectionHeader'
@@ -6,9 +7,11 @@ import { Seo } from './Seo'
 
 /** Conteúdo da 404, reutilizado por rotas com parâmetro inválido (ex.: post inexistente). */
 export function NotFoundContent() {
+  const locale = useLocale()
+  const NOT_FOUND = NOT_FOUND_BY_LOCALE[locale]
   return (
     <>
-      <Seo {...PAGE_SEO.notFound} />
+      <Seo {...PAGE_SEO[locale].notFound} />
       <Section spacing="hero" labelledBy="not-found-title">
         <SectionHeader
           as="h1"
